@@ -1,0 +1,14 @@
+\chapter{Multilinear Maps and Graded Encoding Systems}
+
+In this chapter, multilinear maps are defined and also, the particular case of bilinear maps is discussed, along with results concerning bilinear maps over groups of composite order. Thereafter, \textit{Graded Encoding Schemes} are defined, as an approximate to multilinear maps. \\
+
+\textit{Observation:} Regarding the multilinear maps and Graded Encoding Systems schemes, and also for the lattice-based candidate designed in \cite{GGH13}, the paper encompasses one subsection of efficient procedures, and another one of hardness assumptions. The reader should be aware of this detail and realize the analogy and differences of the mentioned schemes.
+
+
+\section{Bilinear Maps}
+\textbf{Definition 1.} (Bilinear Map \cite{BCM16}). Given the cyclic groups $G$ and $G_t$ (written additively) of the same order $p$, a map $e:G \cart G \ra G_t$ is said to be bilinear if the following properties hold:
+\begin{enumerate}
+	\item \textbf{(Bi-linearity)}\space  $e({g_1}^{x_1}, {g_2}^{x_2}) = e(g_1,g_2)^{x_1x_2},$ for any $x_1,x_2 \in \bZ_p$ and any $g_1, g_2 \in G$;
+	\item  \textbf{(Non-degeneracy)} \space There exists an element $g\in G$ such that $e(g, g) \neq 1_{G_t}$;
+	\item \textbf{(Efficient computability)} There exists a polynomially-bounded algorithm to compute $e(g_1,g_2)$, for any $g_1,g_2 \in G$.
+\end{enumerate}

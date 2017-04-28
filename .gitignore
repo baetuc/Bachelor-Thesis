@@ -1,0 +1,10 @@
+#user-specific files
+*.log
+*.aux
+*.bcf
+*.blg
+*.run.xml
+*.synctex.gz
+*.toc
+*.cls
+*.bbl
