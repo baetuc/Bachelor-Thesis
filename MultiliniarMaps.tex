@@ -1,8 +1,8 @@
 \chapter{Multilinear Maps and Graded Encoding Systems}
 
-In this chapter, multilinear maps are defined and also, the particular case of bilinear maps is discussed, along with results concerning bilinear maps over groups of composite order. Thereafter, \textit{Graded Encoding Schemes} are defined, as an approximate to multilinear maps. \\
+In this chapter, multilinear maps are defined and also, the particular case of bilinear maps is discussed, along with results concerning self-bilinear applications. Thereafter, \textit{Graded Encoding Schemes} are defined, as an approximate to multilinear maps. \\
 
-\textit{Observation:} Regarding the multilinear maps and Graded Encoding Systems schemes, and also for the lattice-based candidate designed in \cite{GGH13}, the paper encompasses one subsection of efficient procedures, and another one of hardness assumptions. The reader should be aware of this detail and realize the analogy and differences of the mentioned schemes.
+\textit{Observation:} Regarding the multilinear applications and Graded Encoding Systems schemes, and also for the lattice-based candidate designed in \cite{GGH13}, the paper encompasses one subsection of efficient procedures, and another one of hardness assumptions. The reader should be aware of this detail and realize the analogy and differences of the mentioned schemes.
 
 
 \section{Bilinear Maps}
@@ -40,6 +40,49 @@ As stated before, bilinear maps are a specific case of multilinear maps. They pr
 Indeed, from the fact that $e_n$ is multilinear it follows that, for any $g_1\in G_1, ..., g_n \in G_n$, any $i\in \{1,..,n\}$ and any $\alpha \in \bZ_p$,  $e_n(g_1,...,\alpha \cdot g_i, ..,g_n) = \alpha \cdot e_n(g_1,...,g_n))$. Using the bilinearity of $e$, it results that $e_{n+1}$ respects the \textbf{linearity} condition.\\
 Let $g_1, ...,g_n$ be generators of $G$. Then, using the fact that $e_{n}$ is $n-$multilinear, it follows that $e_n(g_1,..,g_n)$ is also a generator of $G$. Corroborating the last result with the non-degeneracy property of $e$, it ensues that $e_{n+1}$ respects \textbf{non-degeneracy} condition, from which the conclusion that $e_{n+1}$ is a $(n+1)$-multilinear map can be drawn. \qed\\
 
+However, Cheon and Lee \cite{ChL09} proved that self-bilinear maps on prime order groups do not exist, except that the computational Diffie-Hellman problem is easy. That is the main motivation of \cite{BCM16}, which analyzes the existence of self-bilinear maps on groups of composite order.
+
+\subsection{Efficient Procedures}
+
+In order to use the cryptographic multilinear applications in a real-world environment, efficient procedures must be designed in order to be evaluated by computers. Therefore, as specified in \cite{GGH13}
+a cryptographic multilinear map scheme is a 5-uple $\mathcal{MMP} = $ \textbf{(InstGen, EncTest, add, neg, map)}, as described below:
+\begin{enumerate}[label=(\alph*)]
+	\item \textbf{Instance Generation.}  A procedure with a "factory" role must exist, in order to instantiate the parameters of the scheme. This procedure is \textbf{InstGen}.
+	\begin{itemize}
+		\item \textbf{Input:} $\lambda $ - the security parameter and $k \geq 2$ - the multilinearity parameter.
+		\item \textbf{Output:} (\textbf{params}, $g_1, .., g_k$), where \textbf{params} = ($G_1, .., G_T, p, e$). Here $G_1,..,G_k,$ $G_T$ represent the groups, $p\in \bZ$ is their order, $e$ is the representation of the multilinear map and $g_i \in \{0, 1\}^*$ is the representation of a generator of $G_i$, for every $i \in \{1,..,k\}$.
+	\end{itemize}
+
+
+	\item \textbf{Element Encoding.} A procedure that decides if a sequence of bits represents an encoding of an element in one of the groups must be defined, and it is named \textbf{EncTest}.
+		\begin{itemize}
+		\item \textbf{Input:} \textbf{params} - the instance parameters, $i \in \{1,..,k+1\}$ - index of the desired group and $x\in \{0,1\}^*$ - encoding of the tested element.
+		\item \textbf{Output:} True, if $x$ is a valid encoding of an element in $G_i$, False otherwise. \textit{Note:} The extension $G_{k+1} = G_T$ is performed.
+	\end{itemize}
+
+
+	\item \textbf{Group addition.} The procedure \textbf{add} simply applies the group operation upon two provided elements representations.
+\begin{itemize}
+	\item \textbf{Input:} \textbf{params} - the instance parameters, $i \in \{1,..,k+1\}$ - index of the desired group, $x,y$ - representations of elements to be added.
+	\item \textbf{Output:} the representation of $x+y \in G_i$.                                     
+\end{itemize}
+
+
+	\item \textbf{Group negation.} The procedure \textbf{neg} returns the inverse representation of the  element provided as parameter.
+\begin{itemize}
+	\item \textbf{Input:} \textbf{params} - the instance parameters, $i \in \{1,..,k+1\}$ - index of the desired group, $x$ - representation of the element to be negated.
+	\item \textbf{Output:} the representation of $-x \in G_i$.                                     
+\end{itemize}
+
+
+	\item \textbf{Map computation.} The procedure \textbf{map} returns the representation of the multilinear mapping over the elements given as parameters.
+\begin{itemize}
+	\item \textbf{Input:} \textbf{params} - the instance parameters, $x_1\in G_1, .., x_k \in G_k$ - elements in domain groups.
+	\item \textbf{Output:} the representation of $e(x_1,..,x_k) \in G_T$.
+\end{itemize}
+\end{enumerate}
+
+\subsection{Hardness Assumptions}
 
 
 
