@@ -8,7 +8,7 @@ In this chapter, multilinear maps are defined and also, the particular case of b
 \section{Bilinear Maps}
 As stated before, bilinear maps are a specific case of multilinear maps. They proved to be a highly useful tool in cryptography, with many applications, such as: tripartite protocol \cite{Jou00}, identity based encryption \cite{BoF01} and Attribute-based encryption scheme for monotone boolean formulas \cite{TiD14}. In this section, bilinear maps are only defined, while next section presents a relationship between self-bilinear maps and multilinear maps. \\
 
-\textbf{Definition 1.} (Bilinear Map \cite{BCM16}). \textit{Given the cyclic groups $G$ and $G_t$ (written additively) of the same order $p$, a (symmetric) map $e:G \cart G \ra G_t$ is said to be bilinear if the following properties hold:
+\textbf{Definition 1} (Bilinear Map \cite{BCM16}). \textit{Given the cyclic groups $G$ and $G_t$ (written additively) of the same order $p$, a (symmetric) map $e:G \cart G \ra G_t$ is said to be bilinear if the following properties hold:
 \begin{enumerate}
 	\item \textbf{(Bi-linearity)}\space  $e({g_1}^{x_1}, {g_2}^{x_2}) = e(g_1,g_2)^{x_1x_2},$ for any $x_1,x_2 \in \bZ_p$ and any $g_1, g_2 \in G$;
 	\item  \textbf{(Non-degeneracy)} \space If $g_1, g_2\in G$ are generators of $G$, then $e(g_1, g_2)$ is a generator of $G_t$;
@@ -17,7 +17,7 @@ As stated before, bilinear maps are a specific case of multilinear maps. They pr
 }
 
 \section{Cryptographic Multilinear Maps}
-\textbf{Definition 2.} (Multilinear Maps \cite{Rot13}). \textit{ Let $k \geq 2$ be an integer number and $G_1, G_2,...,G_k, G_T$ be $k + 1$ cyclic groups (written additively), of same order $p$. Then, a $k-$multilinear map is a mapping $e:G_1\cart...\cart G_k \ra G_T$, with the following properties:
+\textbf{Definition 2} (Multilinear Maps \cite{Rot13}). \textit{ Let $k \geq 2$ be an integer number and $G_1, G_2,...,G_k, G_T$ be $k + 1$ cyclic groups (written additively), of same order $p$. Then, a $k-$multilinear map is a mapping $e:G_1\cart...\cart G_k \ra G_T$, with the following properties:
 	\begin{enumerate}
 		\item \textbf{(Linearity)} For every $g_1\in G_1, ..., g_k \in G_k$, every $i\in \{1,2,..,k\}$ and every $\alpha\in \bZ_p$, it holds that:
 \begin{align*}
@@ -44,8 +44,8 @@ However, Cheon and Lee \cite{ChL09} proved that self-bilinear maps on prime orde
 
 \subsection{Efficient Procedures}
 
-In order to use the cryptographic multilinear applications in a real-world environment, efficient procedures must be designed in order to be evaluated by computers. Therefore, as specified in \cite{GGH13}
-a cryptographic multilinear map scheme is a 5-uple $\mathcal{MMP} = $ \textbf{(InstGen, EncTest, add, neg, map)}, as described below:
+In order to use the cryptographic multilinear applications in a real-world environment, efficient procedures must be designed, to be evaluated by computers. Therefore, as specified in \cite{GGH13}
+a cryptographic multilinear map scheme is a 5-uple $\mathcal{MMP} = $ \textbf{(InstGen, EncTest, add, neg, map)} that is described below:
 \begin{enumerate}[label=(\alph*)]
 	\item \textbf{Instance Generation.}  A procedure with a "factory" role must exist, in order to instantiate the parameters of the scheme. This procedure is \textbf{InstGen}.
 	\begin{itemize}
@@ -83,9 +83,55 @@ a cryptographic multilinear map scheme is a 5-uple $\mathcal{MMP} = $ \textbf{(I
 \end{enumerate}
 
 \subsection{Hardness Assumptions}
+For the multilinear map to be used in cryptography, it is inquired that at least the Multilinear Discrete Logarithm problem (MDL) and Multilinear Decisional Diffie-Hellman problem (MDDH) to be hard in the used groups. The specified problems are reminded below:
+
+\begin{enumerate}
+	\item \textbf{Multilinear Discrete Logarithm (MDL \cite{GGH13}).} It is said that the MDL problem is hard for a multilinear map scheme $\mathcal{MMP}$ if, for any $k > 1, $ any $i\in \{1,...,k\}$ and all probabilistic polynomial running time algorithms, the discrete logarithm advantage of an adversary $\mathcal{A}$,
+	\begin{center}
+		AdvDlog$_{\mathcal{MMP, A}, k}(\lambda) \stackrel{\mathclap{\normalfont\mbox{def}}}{=} Pr[\mathcal{A}(params, i, g_i, \alpha \cdot g_i) = \alpha : (params, g_1, ..., g_k) \la$ InstGen$(1^\lambda, 1^k), \alpha \la \bZ_p] $,
+	\end{center}
+	is negligible in $\lambda$.
+	
+	\item \textbf{Multilinear DDH (MDDH \cite{GGH13}).} The MDDH problem is hard for a symmetric multilinear map scheme $\mathcal{MMP}$ (with $G_1=..=G_k = G_T$) if for any probabilistic polynomial running time algorithm $\mathcal{A}$, the advantage of $\mathcal{A}$ in distinguishing between the distributions:
+	
+	\begin{center}
+		$(params, g, \alpha_0g, \alpha_1g,..,\alpha_kg, (\displaystyle{\prod_{i=0}^{k}}\alpha_i)\cdot e(g,..,g))$ and \\
+		$(params, g, \alpha_0g, \alpha_1g,..,\alpha_kg, \alpha \cdot e(g,..,g))$
+	\end{center}
+	is negligible in $\lambda$, where $(params, g)\la$ InstGen$(1^\lambda, 1^k)$ and $\alpha, \alpha_1, .., \alpha_k$ are uniformly random in $\bZ_p$.
+\end{enumerate}
 
 
+\section{Graded Encoding Systems}
+Garg, Gentry and Halevi formally defined the Graded Encoding Systems in \cite{GGH13}. Using the mentioned system, the authors managed to realize an "approximation" of the sought after multilinear maps in groups in which the DL problem is hard. \\
 
+They generalize the conventional constructions, by replacing the usual exponent space, $\bZ_p$, with a generic algebraic ring or field $R$. Also, the system is non-deterministic, with the significance that the same element can be encoded in plentiful of ways. Another difference is that the system offers the possibility of "partial mapping", i.e. multiplying any number of encodings, not only $k$, as in the multilinear map case. Thus, the structure of the system is much richer, revealing the opportunity to encode the same element on many different levels.\\
 
+In the current section, the general settings of the system are discussed, following that the construction of an instance of Graded Encoding Systems (GES) to be approached in a subsequent chapter.\\
 
+\textbf{Definition 4} ($k-$ Graded Encoding System). \textit{
+	Let $k > 1$ be an integer. A $k-$ Graded Encoding System is formed by a ring $(R, +_R, \cdot_R)$ and a system of sets $\mathcal{S} = \{S_i^{(\alpha)}\subset \{0,1\}^*: \alpha \in R, i\in \{0,1,..,k\} \}$, with the properties:
+	\begin{enumerate}
+	\item For any $i\in \{0,1,..,k\}$, the sets $\{S_i^{(\alpha)}:\alpha \in R\}$ are disjoint;
+	\item An associative binary operation '+' and an unary operation '-' can be defined on $\{0,1\}^*$, such that for any $\alpha_1, \alpha_2 \in R$, any $i \in \{0,..,k\}$ and any encodings $u_1\in S_i^{(\alpha_1)},$ $u_2\in S_i^{(\alpha_2)}$, it follows that $u_1 + u_2 \in S_i^{(\alpha_1 +_R \alpha_2)}$ and $-u_1\in S_i^{(-_R\alpha_1)}$;
+	\item An associative binary operation '$\cart$' can be defined on $\{0,1\}^*$, such that for any $\alpha_1, \alpha_2 \in R$, any integers $0\leq i_1, i_2$ such that $i_1+i_2 \leq k$ and any encodings $u_1 \in S_{i_1}^{(\alpha_1)},$ $u_2 \in S_{i_2}^{(\alpha_2)}$, it results that $u_1\cart u_2 \in S_{i_1 +_R i_2}^{(\alpha_1 \cdot_R \alpha_2)}$.
+\end{enumerate}
+}
 
+\subsection{Efficient Procedures}
+\begin{enumerate}[label=(\alph*)]
+	\item \textbf{Instance Generation.}	 Again, \textbf{InstGen} is a randomized procedure that has the task to instantiate the parameters of the scheme.
+	\begin{itemize}
+		\item \textbf{Input:} $\lambda $ - the security parameter and $k \geq 2$ - the multilinearity parameter.
+		\item \textbf{Output:} (\textbf{params}, \pzt), where \textbf{params} completely specifies the $k-$GES, and {\pzt}  is a zero-test parameter, as described below.
+	\end{itemize}
+
+	\newpage
+	\item \textbf{Ring Sampler.} \textbf{samp} is a non-deterministic procedure that returns a "level-zero" encoding of a nearly uniform element of $R$.
+		\begin{itemize}
+		\item \textbf{Input}: None
+		\item \textbf{Output:} $a\in S_0^{(\alpha)}$, with $\alpha\in R$ - nearly uniform.
+	\end{itemize}
+
+	\item \textbf{Encoding.} 
+\end{enumerate}
