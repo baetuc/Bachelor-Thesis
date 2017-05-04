@@ -184,4 +184,26 @@ In the current section, the general settings of the system are discussed, follow
 
 \subsection{Hardness Assumptions}
 
-dsa dadas
+The current subsection presents the analogues of \textbf{MDL} and \textbf{MDDH}, discussed in the previous section. 
+
+\begin{enumerate}
+	\item \textbf{Graded Discrete Logarithm (GDL \cite{GGH13}).} It is said that the GDL problem is hard for a Graded Encoding System $GES$ if for all probabilistic polynomial running time algorithms, the discrete logarithm advantage of an adversary $\mathcal{A}$,
+	
+	\begin{center}
+		AdvDlog$_{GES, \mathcal{A}, k}(\lambda) \stackrel{\mathclap{\normalfont\mbox{def}}}{=} Pr[\mathcal{A}(params,$ {\pzt}, $u) = a : (params, $ {\pzt}) $\la$ InstGen$(1^\lambda, 1^k), \alpha\in R, u \in S_k^{(\alpha)}, a\in S_0^{(\alpha)} $,
+	\end{center}
+
+	is negligible in $\lambda$.
+	
+	\item \textbf{Graded DDH (GDDH \cite{GGH13}). } The GDDH problem is hard for a Graded Encoding System $GES$ if for any probabilistic polynomial running time algorithm $\mathcal{A}$, the advantage of $\mathcal{A}$ in distinguishing between the distributions :
+	
+	\begin{center}
+		(params, {\pzt}$, a_0, ... ,a_k,$ \textbf{enc} (params, $k, \displaystyle{\prod_{i=0}^{k} e_i}$)) and \\
+		(params, {\pzt}$, a_0, ... ,a_k,$ \textbf{enc}(params, $k,$ \textbf{samp}(params)))
+	\end{center}
+	is negligible in $\lambda$, where $(params, $ {\pzt} $)\la$ InstGen$(1^\lambda, 1^k)$ and for every $i \in \{0,..,k\}$, the referenced elements are: $e_i =$ \textbf{samp}(params), $a_i = $ \textbf{enc}(params, 1, $e_i$). \\
+	
+	The intuition behind GDDH is that, given $k + 1$ level-one encodings of random elements, one could not easily distinguish a level-$k$ encoding of their product from random.
+	
+	
+\end{enumerate}
