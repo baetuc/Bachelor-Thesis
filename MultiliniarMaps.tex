@@ -122,16 +122,66 @@ In the current section, the general settings of the system are discussed, follow
 \begin{enumerate}[label=(\alph*)]
 	\item \textbf{Instance Generation.}	 Again, \textbf{InstGen} is a randomized procedure that has the task to instantiate the parameters of the scheme.
 	\begin{itemize}
-		\item \textbf{Input:} $\lambda $ - the security parameter and $k \geq 2$ - the multilinearity parameter.
-		\item \textbf{Output:} (\textbf{params}, \pzt), where \textbf{params} completely specifies the $k-$GES, and {\pzt}  is a zero-test parameter, as described below.
+		\item \textbf{Input:} {\boldmath$\lambda$} - the security parameter and {\boldmath$k$} $\geq 2$ - the multilinearity parameter.
+		\item \textbf{Output:} \textbf{InstGen}($1^\lambda, 1^k$) = (\textbf{params}, \pzt), where \textbf{params} completely specifies the $k-$GES, and {\pzt}  is a zero-test parameter, as described below.
 	\end{itemize}
 
 	\newpage
 	\item \textbf{Ring Sampler.} \textbf{samp} is a non-deterministic procedure that returns a "level-zero" encoding of a nearly uniform element of $R$.
 		\begin{itemize}
 		\item \textbf{Input}: None
-		\item \textbf{Output:} $a\in S_0^{(\alpha)}$, with $\alpha\in R$ - nearly uniform.
+		\item \textbf{Output:} \textbf{samp}(\textbf{params}) = {\boldmath$a$} $\in S_0^{(\alpha)}$, with $\alpha\in R$ - nearly uniform.
 	\end{itemize}
 
-	\item \textbf{Encoding.} 
+	\item \textbf{Encoding.} The procedure \textbf{enc} computes an encoding on any level of a given "level-zero" encoding.
+	\begin{itemize}
+		\item \textbf{Input}: \textbf{params} - the instance parameters, {\boldmath$i$} $\in \{0,..,k\}$ - the index of the desired level of encoding and {\boldmath$a$} $\in S_0^{(\alpha)}$ - the "level-zero" encoding of an element $\alpha \in R$.
+		\item \textbf{Output:} \textbf{enc}(\textbf{params}, $i, a$) = {\boldmath$v$} $\in S_i^{(\alpha)}$ - a level$-i$ encoding of the same $\alpha$ previously specified.
+	\end{itemize}
+
+	\item \textbf{Addition.} The procedure \textbf{add} computes an encoding of the sum of two same-level encodings.
+	\begin{itemize}
+		\item \textbf{Input}: \textbf{params} - the instance parameters, {\boldmath$i$} $\in \{0,..,k\}$ - the index of the level of encoding, {\boldmath$v_1$} $\in S_i^{(\alpha_1)},$ {\boldmath$v_2$} $\in S_i^{(\alpha_2)}$ (where $\alpha_1, \alpha_2\in R$) - encodings of the elements to be added.
+		\item \textbf{Output:} \textbf{add}(\textbf{params}, $i, v_1, v_2$) = {\boldmath$ v_1 + v_2$} $ \in S_i^{(\alpha_1 +_R \alpha_2)}$.
+	\end{itemize}
+
+	
+	\item \textbf{Negation.} The procedure \textbf{neg} computes an encoding of the inverse of a provided element.
+	\begin{itemize}
+		\item \textbf{Input}: \textbf{params} - the instance parameters, {\boldmath$i$} $ \in \{0,..,k\}$ - the index of the level of encoding, {\boldmath$v$} $\in S_i^{(\alpha)}$ (where $\alpha\in R$) - an encoding of the element to be negated.
+		\item \textbf{Output:} \textbf{neg}(\textbf{params}, $i, v$) = {\boldmath $-v $} $\in S_i^{(-_R\alpha)}$.
+	\end{itemize}
+
+
+	\item \textbf{Multiplication.} The procedure \textbf{mul} computes an encoding of the multiplication of two elements, which may be on different levels of encoding.
+	\begin{itemize}
+		\item \textbf{Input}: \textbf{params} - the instance parameters, $0 \leq$ {\boldmath$ i_1, i_2 $} - the indexes of the encoding levels of the elements (with $i_1 + i_2 \leq k$) , {\boldmath$u_1$} $ \in S_{i_1}^{(\alpha_1)},$ {\boldmath$ u_2$} $ \in S_{i_2}^{(\alpha_2)}$ - the encoding of the elements to be multiplied.
+		\item \textbf{Output:} \textbf{mul}(params, $i_1,u_1,i_2,u_2$) = {\boldmath$u_1 \cart u_2$} $ \in S_{i_1+_R i_2}^{(\alpha_1 \cdot_R \alpha_2)}$.
+	\end{itemize}
+
+	\item \textbf{Zero-test.} The procedure \textbf{isZero} verifies if the given parameter is a "level-$k$" encoding of 0.
+	\begin{itemize}
+		\item \textbf{Input}: \textbf{params} - the instance parameters, {\boldmath$u$} - a "level-$k$" encoding of an element in $R$.
+		\item \textbf{Output:} \textbf{isZero}(params, $u$) = \textbf{1}, if $u \in S_k^{(0)}$, \textbf{0} otherwise.
+	\end{itemize}
+
+	\item \textbf{Extraction.} The procedure \textbf{ext} realizes the "selection" of a unique "level-$k$" representative, for every ring element. Also, the elements returned are almost random over $\{0, 1\}^\lambda$.
+	\begin{itemize}
+		\item \textbf{Input}: \textbf{params} - the instance parameters, {\pzt} - the zero-test parameter, {\boldmath$u$} - the "level$-k$" encoding of a ring element.
+		\item \textbf{Output:} \textbf{ext}(params, {\pzt}, $u$) = {\boldmath$s$} $\in \{0,1\}^\lambda$, such that:
+		\begin{enumerate}[label=(\roman*)]
+			\item $\forall \alpha \in R, v_1,v_2\in S_k^{(\alpha)}$, it holds that \textbf{ext}(params, {\pzt}, $v_1$) = \textbf{ext}(params, {\pzt}, $v_2$);
+			\item The distribution \{\textbf{ext}(params, {\pzt}, $v$) : $\alpha \in R, v \in S_k^{(\alpha)}$\} is nearly uniform over $\{0,1\}^\lambda$.
+		\end{enumerate}
+	\end{itemize}
+	
+	
 \end{enumerate}
+
+\textbf{Remark 1.} \textit{In practice, due to the limitations of computers, the zero-test and the extraction procedures requirements are lessened. Therefore, the zero-test procedure may output 1 for encodings of non-zero elements, with negligible probability in $\lambda$. Also, the extraction procedure may output different "level-$k$" representatives of the same ring element, again with negligible probability in $\lambda$}.\\
+
+\textbf{Remark 2.} \textit{To test if two elements, $u, v\in S_k$, encode the same element $\alpha \in R$, it is sufficient to verify if \textbf{isZero}(params, \textbf{add}(params, $k, u$, \textbf{neg}(params, $k, v$)))) returns 1, i.e. $u - v \in S_k^{(0)}$.}
+
+\subsection{Hardness Assumptions}
+
+dsa dadas
