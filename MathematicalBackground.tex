@@ -1,1 +1,47 @@
 \chapter{Mathematical Background}
+
+The purpose of this chapter is to remind the reader basic notions regarding algebra and statistics, but also to analyze in detail concepts and algorithms concerning lattices, especially integer lattices. 
+
+\section {Algebra}
+The notions of group, cyclic group, ring and polynomial are considered to be previously known by the average reader. More information about the mentioned structures can be found in \cite{HPS08}, chapter 2. For a mathematical perspective over groups and polynomial rings properties, and also for a deep incursion in field extension theory, the reader can explore \cite{BB15}.
+
+\begin{enumerate}
+	\item \textbf{Ideals and Quotient Rings.} 
+	
+	\textbf{Definition 5.} \textit{Let $(R, +, \cdot)$ be a commutative finite ring. An \textbf{ideal} of $R$ is a nonempty set $\ci \subseteq R$ that is closed under addition and $ax=xa \in \ci, \forall x \in \ci, \forall a \in R.$} \\
+	
+	Let $(R, +, \cdot)$ be a finite ring and $\ci$ be an ideal of $R$. Also, let $"\sim"$ be an equivalence relationship on $R$, defined by $x \sim y \iff \exists a\in \ci $ such that $x = y + a$. The equivalence class of an element $x \in R$ is usually noted with $\hat{x}$, and it represents the set $\{y \in R : y \sim x\}$. The equivalence classes generate a partition of the set $R$, named \textit{quotient set}, and denoted by $R/\ci$. It is known that $(R/\ci, +, \cdot)$ is also a ring, and it is called the \textbf{quotient ring} $R/\ci$.
+	
+	\textbf{Remark 3.} \textit{An example of a quotient ring is the well-known ring $\bZ_p = \bZ/p\bZ.$}
+	
+	\item \textbf{Cyclotomic polynomials.}
+	
+	\textbf{Definition 6 \cite{BB15}.} \textit{Let $n \geq 1$ be an integer and $P_n $ be the set of all the $n^{th}$ primitive roots of unity. Then, the \textbf{$n^{th}$ cyclotomic polynomial} is $\Phi_n = \displaystyle{\prod_{\xi \in P_n}}(X-\xi)$}.
+	
+	\textbf{Remark 4.} Using the fact that $\Phi_{p^k}(X) = \Phi_p(X^{p^{k-1}})$, for any positive integers $k, p$, with $p-$prime, it can be proved that $\Phi_{2^k}(X) = X^{2^{k-1}} + 1,$ for any integer $k \geq 1$.
+	
+	\item \textbf{Vector spaces}.
+	
+	Throughout the paper, vectors and matrices are thickened, e.g. $\textbf{v}$. Also, every vector space is considered to be contained in $R^m$, with $m \geq 1$, integer.\\
+	
+	\textbf{Definition 7 \cite{HPS08}.} \textit{Let $m$ be a positive integer. A \textbf{vector space} $V$ is a subset of $\bR^m$, such that for every $\alpha_1, \alpha_2 \in \bR$ and every} $\textbf{v}_1, \textbf{v}_2 \in V$, it holds: $\alpha_1 \vv_1 + \alpha_2 \vv_2\in V$.
+	
+	The user is expected to master the concepts of \textit{linear combination, linear independence, basis, vector orthogonality, basis orthogonality}. For a quick review over the mentioned concepts, visit \cite{HPS08}.\\
+	
+	The only algorithm regarding vector spaces to be presented in the current paper is the  \textbf{Gram-Schmidt Algorithm}. It receives as input a basis $\{\vv_1, .., \vv_n\}$ of the vector space $V$ and outputs $\{\vv_1^*,..,\vv_n^*\}$ - an orthonormal basis of $V$. The algorithm is presented below:
+
+\begin{tcolorbox}[colframe=black,colback=white,arc=0pt,outer arc=0pt]
+	\begin{algorithmic}[1]
+		\State Set $\vv_1^* = \vv_1$
+		\For{$i \la 2$ \textbf{to} $n$}
+		\State Compute $\mu_{ij} = \vv_i \cdot \vv_j^*$ $/$ $ ||\vv_j^*||$,  for $1 \leq j < i$
+		\State Set $\vv_i^* = \vv_i - \displaystyle{\sum_{j = 1}^{i-1}} \mu_{ij} \vv_j^* $
+		\EndFor
+	\end{algorithmic}
+\end{tcolorbox}
+
+	Intuitively, $\mu_{ij}$ represents the length of the projection of $\vv_i$ over $\vv_j^*$. Therefore, the substraction $\vv_i - \mu_{ij} \vv_j^*$ generate the projection of $\vv_i$ over the orthogonal complement of $\vv_j^*$, which leads to the desired output. 
+\end{enumerate}	
+
+\section{Lattices}
+
