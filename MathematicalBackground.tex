@@ -31,6 +31,9 @@ The notions of group, cyclic group, ring and polynomial are considered to be pre
 	The only algorithm regarding vector spaces to be presented in the current paper is the  \textbf{Gram-Schmidt Algorithm}. It receives as input a basis $\{\vv_1, .., \vv_n\}$ of the vector space $V$ and outputs $\{\vv_1^*,..,\vv_n^*\}$ - an orthonormal basis of $V$. The algorithm is presented below:
 
 \begin{tcolorbox}[colframe=black,colback=white,arc=0pt,outer arc=0pt]
+	\begin{center}
+		\textbf{The Gram-Schmidt Algorithm}
+	\end{center}
 	\begin{algorithmic}[1]
 		\State Set $\vv_1^* = \vv_1$
 		\For{$i \la 2$ \textbf{to} $n$}
@@ -58,15 +61,16 @@ Since the proposal of \textbf{LLL} algorithm, lattices became appealing to the w
 	$L$   $  \stackrel{\mathclap{\normalfont\mbox{not.}}}{=} \mathcal{L}(B) = \{a_1\vv_1 + a_2 \vv_2 +... + a_n\vv_n : a_1, a_2, ..,a_n \in \bZ\}$.
 \end{center}
 
-\textit{Also, a lattice that contains only vectors with integer coordinates is called an \textbf{integer lattice}}.
+\textit{Also, a lattice that contains only vectors with integer coordinates is called an \textbf{integer lattice}}. The \textbf{dual lattice} is denoted by $L^* = \{\textbf{y} \in Span(L) : \forall \textbf{x} \in L, \langle\textbf{x, y}\rangle \in \bZ\}$.
+
 
 From a visual point of view, the elements of a lattice are structured as a net, with massive holes between the nodes, as it can be noticed in Figure 1.
-\newpage
 
 \textbf{Definition 9 (\cite{HPS08}).} \textit{Let $L$ be a $n$-dimensional lattice and} $B = \{\vv_1,...,\vv_n\}$ \textit{be a basis for the lattice $L$. The \textbf{fundamental domain} for $L$ that is associated with $B$ is:}
 \begin{center}
 	$\mathcal{F}(\vv_1,...,\vv_n) = \{t_1\vv_1 + ...+ t_n\vv_n : t_i \in [0, 1], \forall i \in \{1,..., n\}\}$.
 \end{center}
+
 
 \begin{center}
 	\input{latticenice.tex}
@@ -114,7 +118,106 @@ The current subsection only states the most important results regarding shortest
 
 The vigilant reader may note that the \textit{gaussian expected shortest length} is two times smaller than the upper bound presented in \textit{Remark 6}. \\
 
-\subsection{Attempts to solve hard lattice problems}
+\subsection{LLL Algorithm}
+
+The hard problems \textbf{SVP} and \textbf{CVP} may become easy if an orthogonal basis for the lattice is known in advance. It can be quickly verified that a solution to \textbf{SVP} is in fact the shortest vector in the orthogonal basis.\\
+
+The result is usually accurate even for quasi-orthogonal basis, i.e. basis with a Hadamard ratio reasonably close to 1. Babai designed an algorithm that solves \textbf{CVP} in a setting in which a quasi-orthogonal basis is known. \textbf{Babai's Algorithm} receives as input a quasi-orthogonal basis $B = \{\vv_1,...,\vv_n\}$ of the lattice $L \subset \bR^n$ and a vector $\textbf{w} \in \bR^n$. It outputs a vector $\vv\in \bR^n$, solution to \textbf{CVP} problem. The algorithm is presented below, based on \cite{HPS08}:\\
 
 
+\begin{tcolorbox}[colframe=black,colback=white,arc=0pt,outer arc=0pt]
+	\begin{center}
+		\textbf{Babai's Algorithm}
+	\end{center}
+	\begin{algorithmic}[1]
+		\State Find $\alpha_1, \alpha_2,...,\alpha_n \in \bR $ such that $\textbf{w} = \alpha_1\vv_1 + \alpha_2\vv_2+...+\alpha_n\vv_n$
+		\For{$i \la 12$ \textbf{to} $n$}
+		\State Set $\beta_i = \big\lfloor \alpha_i + \frac{1}{2}$\big\rfloor
+		\EndFor
+		\State $\vv = \beta_1 \vv_1 + \beta_2 \vv_2 +...+\beta_n\vv_n$
+	\end{algorithmic}
+\end{tcolorbox}
+~\\
+
+Therefore, solving \textbf{SVP} or \textbf{CVP} for a lattice $L$ reduces to finding a quasi-orthogonal basis for $L$. The \textbf{LLL} algorithm managed to fill this gap, for lattices of low dimension (i.e. less than 300). Hence, the algorithm had a colossal success among the cryptographers, and it represented the first step to include lattices in the world of cryptography.\\
+
+Presented in \cite{LLL82}, the \textbf{LLL} algorithm was initially conceived to provide a polynomial-time algorithm for factoring polynomials with rational coefficients. Two necessary conditions were formulated for a basis $B = \{\vv_1, ..., \vv_n\}$ in order to be considered \textit{LLL reduced}:
+
+\begin{itemize}
+	\item \textbf{Size condition:} $|\mu_{i,j}| =  \frac{|\vv_i \cdot \vv_j^*|}{||\vv_j^*||^2} \leq \frac{1}{2}, \forall$ $ 1 \leq j < i \leq n$;
+	
+	\item \textbf{Lov\'asz Condition:} $|| \vv_i^* || \geq \big( \frac{3}{4} - \mu_{i,i-1}^2 \big) ||\vv_{i-1}^*||^2, \forall $ $1 < i \leq n$,
+\end{itemize}
+where $B^* = \{\vv_1^*, ..., \vv_n^*\}$ is the orthogonal basis returned by the \textbf{Gram-Schmidt} algorithm and $\mu_{i,j}$ refers to the constants defined in the same algorithm.\\
+
+\textbf{Proposition 4. (LLL reduced basis apprSVP \cite{HPS08}).} \textit{ Let $n$ be a positive integer and let $L \subset \bR^n$ be a lattice of dimension $n$. For any \textbf{LLL reduced basis}} $B = \{\vv_1,...,\vv_n\}$, \textit{the following property holds:}
+\begin{center}
+	$||\vv_1|| \leq 2^{(n-1) / 2} \cdot \displaystyle{\min_{\vv \in L \backslash \{\textbf{0}\}} || v||}$.
+\end{center}
+
+As it can be easily observed, using the \textbf{LLL} lattice-reduction algorithm leads to solving \textbf{apprSVP} by a factor of $2^{(n-1)/2}$. \\
+
+\textbf{LLL} algorithm is presented below, in the version illustrated by the book of Hoffstein, Pipher and Silverman, \cite{HPS08}. The input of the algorithm is a basis $B = \{\vv_1,\vv_2,...,\vv_n\}$, and the output is the basis $B$, modified as a \textit{LLL reduced basis}: \\
+
+\begin{tcolorbox}[colframe=black,colback=white,arc=0pt,outer arc=0pt]
+	\begin{center}
+		\textbf{LLL Algorithm}
+	\end{center}
+	\begin{algorithmic}[1]
+		\State Set k = 2
+		\State Set $\vv_1^* = \vv_1$
+		\While{$k \leq n$}
+		\For {$j \la k-1$ \textbf{downto} $1$}
+		\State Set $\vv_k = \vv_k - \big\lfloor \mu_{k,j} + \frac{1}{2} \big\rfloor \vv_j$     \Comment \textbf{Size Reduction}
+		\EndFor
+		
+		\If{$||\vv_k^*||^2 \geq \big( \frac{3}{4} - \mu_{k,k-1}^2 \big) ||\vv_{k-1}^*||^2$} \Comment \textbf{Lov\'asz Condition}
+		\State Set $k = k + 1$
+		\Else 
+		\State Swap $\vv_{k-1}$ and $\vv_k$ 
+		\State Set $k=\max (k-1, 2)$
+		\EndIf
+		\EndWhile
+	\end{algorithmic}
+\end{tcolorbox}
+~\\
+
+\textbf{Theorem 3 (LLL Correctness and Running Time \cite{HPS08}).} \textit{Let $n$ be a positive integer, let $L \subset \bR^n$ be a lattice of dimension $n$ and let} $B = \{\vv_1,...,\vv_n\}$ \textit{be a basis for $L$. Then, the \textbf{LLL algorithm}, presented above, returns an \textbf{LLL reduced basis} for $L$, and also it terminates in a finite number of steps.}\\
+
+\textbf{Remark 7.} \textit{The algorithm executes the steps [3]-[13] no more than $\mathcal{O}(n^2 \log n + n^2 \log D)$ times, where} $D = \displaystyle{\max_{\textbf{w} \in B} ||\textbf{w}||}$. \textit{Thus, LLL is a polynomial-time algorithm}.\\
+
+\textbf{LLL} proved its utility in cryptanalysis, its applications covering attacks on the family of knapsack public-key cryptosystems, but also on GGH and NTRU cryptosystems. 
+
+\section{Probabilities and Statistics}
+
+The construction of the Graded Encoding Scheme exposed in \cite{GGH13} requires in-depth results concerning probabilities and statistics, mainly due to the nondeterministic character of the encodings of elements. Therefore, the current section presents the essential results regarding discrete Gaussian distributions over lattices, the sum of discrete Gaussians and the smoothing parameter for a lattice.\\
+
+\begin{enumerate}
+	\item \textbf{Gaussian distributions \cite{AGH+12}.} The ellipsoid, continuous $n-$ dimensional Gaussian distribution, with mean {\boldmath$\mu$} and covariance matrix {\boldmath$\Sigma$} is denoted by $\mathcal{N}^n($ {\boldmath$\mu, \Sigma)$}, and has the density function $f(\textbf{x}) = \frac{1}{\sqrt{(2\pi)^k |\Sigma|\cdot}} \exp \big( -\frac{1}{2}$ {\boldmath$(\textbf{x} - \mu)^T \Sigma ^{-1} (\textbf{x} - \mu)$}$\big)$.\\
+	
+	\textbf{Definition 12.} \textit{ Let $m,n$ be two positive integers, let $S \in \bR^{m\cart n}$ be a rank-$n$ matrix and let {\boldmath$\mu$}$\in\bR^n$ be an $n-$dimensional vector. The \textbf{ellipsoid Gaussian function} over $\bR^n$, centered at {\boldmath$\mu$} and with parameter $S$ is denoted by:}
+	\begin{center}
+		$\rho_{S, \bm{\mu}}(\textbf{x}) = \exp \big(-\pi (\textbf{x} - \bm{\mu})^T(S^TS)^{-1}(\textbf{x} - \bm{\mu}) \big), \forall \textbf{x}\in \bR^n$.
+	\end{center}
+
+	For the particular case $\bm{\mu} = \textbf{0}$, the short version $\rho_S(\cdot)$ is used.\\
+	
+	\textbf{Definition 13.} \textit{Let $m,n$ be two positive integers, let $S \in \bR^{m\cart n}$ be a rank-$n$ matrix and let $L \subset \bR^n$ be an $n-$dimensional lattice. The \textbf{ellipsoid discrete Gaussian distribution} over $L$, centered at \textbf{0} and with parameter $S$ is:} 
+	\begin{center}
+		$\mathcal{D}_{L,S}(\textbf{x}) = \frac{\rho_S(\textbf{x})}{\rho_S(L)}, \forall \textbf{x} \in L$,
+	\end{center}
+\textit{where} $\rho_S(L) = \displaystyle{\sum_{\textbf{x}\in L} \rho_S(\textbf{x})}$.
+	
+	\item \textbf{Smoothing parameter \cite{MiR04}.} Intuitively, the \textit{smoothing parameter} of a lattice represents a lower bound for the value of the radius of a discrete Gaussian distribution $\mathcal{D}$ with the property: if a noise vector is extracted from $\mathcal{D}$ and is reduced modulo the fundamental domain of the lattice, then the resulted distribution is close to uniform. Formally, the smoothing parameter is defined below:\\
+	
+	\textbf{Definition 14 (Smoothing parameter \cite{MiR04}).} Let $n$ be a positive integer,  let $L \subset \bR^n$ be an $n-$dimensional lattice and let $\epsilon$ be a positive real number. The \textbf{smoothing parameter} for $L$ and $\epsilon$ is denoted by $\eta_\epsilon(L)$ and represents the smallest $s \in \bR$ such that $\rho_{1/s}(L^* \backslash \{\textbf{0}\}) \leq \epsilon$.
+
+	\textbf{Lemma 1 (\cite{AGH+12}).} Let $m,n$ be two positive integers,  let $L \subset \bR^n$ be an $n-$dimensional lattice, $\epsilon \in (0,1)$ and let $S\in\bR^{m\cart n}$ be a rank-$n$ matrix such that $\sigma_n(S) \geq \eta_\epsilon(L)$. Then, 
+	\begin{center}
+		$\displaystyle{\Pr_{v \la \mathcal{D}_{L, S}}} \big( ||\vv|| \geq \sigma_1(S) \sqrt{n} \big)\leq \frac{1 + \epsilon}{1 - \epsilon} \cdot 2^{-n}$,
+	\end{center}
+where $\sigma_1(S), \sigma_n(S)$ denote the largest, respectively the least singular values of $S$.
+
+
+\end{enumerate}
 
