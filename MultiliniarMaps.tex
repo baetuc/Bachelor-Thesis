@@ -4,6 +4,25 @@ In this chapter, multilinear maps are defined and also, the particular case of b
 
 \textit{Observation:} Regarding the multilinear applications and Graded Encoding Systems schemes, and also for the lattice-based candidate designed in \cite{GGH13}, the paper encompasses one subsection of efficient procedures, and another one of hardness assumptions. The reader should be aware of this detail and realize the analogy and differences of the mentioned schemes.
 
+\section{Notations}
+Throughout the paper, the following notations will be used, as mentioned in \cite{BoS02}:
+
+\begin{enumerate}
+	\item The set of all finite length binary string is denoted by $\{0, 1\}^*$. Also, for any positive integer $n$, the notation $\{0,1\}^n$ denotes the set of all binary strings of length $n$. 
+	
+	\item Let $\mathcal{D}$ be a probabilistic event. Then, the \textbf{probability} of the event is denoted by $\Pr[\mathcal{D}]$. 
+	
+	\item Let $m$ be an arbitrary positive integer. A \textbf{randomized algorithm $\mathcal{A}$} is a function of two parameters, $x \in \{0,1\}^*$ - the input of the algorithm and $r \in \{0, 1\}^n$ - a sequence of random bits used by the algorithm Also, for an input $x, \mathcal{A}(x)$ denotes the random variable $\mathcal{A}(x, R)$, where $R$ is uniformly distributed in $\{0,1\}^m$.
+	
+	\item Let $S$ be a finite set. Then, by $x \la S$ is defined a random variable $x$ that picks an element of $S$ at random, i.e. $\Pr[x = s] = \frac{1}{|S|}, \forall s\in S$.
+	
+	\item Let $\mathcal{A}$ be a randomized algorithm and let $x \in \{0,1\}^*$. Then, $y \la \mathcal{A} (x)$ denotes the random variable $y$ that represents the output of the algorithm $\mathcal{A}$ on input $x$.
+	
+	\item A function $f:\bZ^+ \ra \bR^+$ is said to be \textbf{negligible} if:
+	\begin{center}
+		$\forall c > 0, \exists n_c \in \bZ^+$ such that $f(n) < \frac{1}{n^d}, \forall n \geq n_c$.
+	\end{center}
+\end{enumerate}
 
 \section{Bilinear Maps}
 As stated before, bilinear maps are a specific case of multilinear maps. They proved to be a highly useful tool in cryptography, with many applications, such as: tripartite protocol \cite{Jou00}, identity based encryption \cite{BoF01} and Attribute-based encryption scheme for monotone boolean formulas \cite{TiD14}. In this section, bilinear maps are only defined, while next section presents a relationship between self-bilinear maps and multilinear maps. \\
@@ -126,7 +145,6 @@ In the current section, the general settings of the system are discussed, follow
 		\item \textbf{Output:} \textbf{InstGen}($1^\lambda, 1^k$) = (\textbf{params}, \pzt), where \textbf{params} completely specifies the $k-$GES, and {\pzt}  is a zero-test parameter, as described below.
 	\end{itemize}
 
-	\newpage
 	\item \textbf{Ring Sampler.} \textbf{samp} is a non-deterministic procedure that returns a "level-zero" encoding of a nearly uniform element of $R$.
 		\begin{itemize}
 		\item \textbf{Input}: None
