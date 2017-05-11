@@ -18,6 +18,11 @@ Throughout the paper, the following notations will be used, as mentioned in \cit
 	
 	\item Let $\mathcal{A}$ be a randomized algorithm and let $x \in \{0,1\}^*$. Then, $y \la \mathcal{A} (x)$ denotes the random variable $y$ that represents the output of the algorithm $\mathcal{A}$ on input $x$.
 	
+	\item Let $X$ and $Y$ be two distributions over domain $D$. Then, the \textbf{statistical distance} between $X$ and $Y$ is:
+	\begin{center}
+		$\Delta(X, Y) = \frac{1}{2} \displaystyle{\sum_{d\in D} |\Pr [X=d] - \Pr[Y=d]|}$.
+	\end{center}
+	
 	\item A function $f:\bZ^+ \ra \bR^+$ is said to be \textbf{negligible} if:
 	\begin{center}
 		$\forall c > 0, \exists n_c \in \bZ^+$ such that $f(n) < \frac{1}{n^d}, \forall n \geq n_c$.
