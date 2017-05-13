@@ -36,8 +36,12 @@ The procedures to be presented are a specific case of the efficient procedures i
 			\State Choose $\textbf{b}_i \la \mathcal{D}_{\hat{0}, \sigma'''}, \forall i \in \{1,2,..., m\}$ and compute $\xx_i = \big[\frac{\textbf{b}_i}{\textbf{z}}\big]_q, \forall i \in \{1,2,..., m\}$, \textbf{public} level-one representations of $\hat{0}$. Also, set  $X = (\xx_1 | \xx_2 |...|\xx_m)^T$.
 			\Statex
 			
-			\State Choose \pzt $\la R_q$ and $s \la \bZ.$ 
+			\State Choose $\textbf{h} \la \mathcal{D}_{\bZ^n, \sqrt{q}}$ such that $h \notin \id$, then compute the zero-testing parameter \pzt$=\big[\frac{\textbf{hz}^k}{\textbf{g}}\big]_q$.
 			\Statex
+			
+			\State Choose $s \la \bZ$.
+			\Statex
+			
 			\State \textbf{Output}: params = ($n, q, \textbf{y}, \xx_1,\xx_2,..,\xx_m, s$), \pzt.
 		\end{algorithmic}
 	\end{tcolorbox}
@@ -56,7 +60,7 @@ The procedures to be presented are a specific case of the efficient procedures i
 		
 		\item $\zz$ is chosen uniformly from $R_q$, thus with overwhelming probability is not "small". Using \cite{Gar15} (\textit{Lemma 5.20}), it follows that with overwhelming probability, $\zz$ is invertible in $R_q$.
 		
-		\item Parameters $\textbf{y}$ and $X$ will show their usefulness during the \textbf{higher-level encoding} procedure. Also, {\pzt} is used as a zero-testing parameter, while $s$ is used as a seed for a strong randomness extractor.
+		\item Parameters $\textbf{y}$ and $X$ will show their usefulness during the \textbf{higher-level encoding} procedure. Also, {\pzt} is used as a zero-testing parameter, while $s$ is used as a seed for a strong randomness extractor.\\
 	\end{enumerate}
 
 
@@ -85,7 +89,9 @@ The procedures to be presented are a specific case of the efficient procedures i
 
 Since $\sigma' \geq \sqrt{\lambda n}||g||$, it is obvious that $\sigma' \geq \eta_{2^{-\lambda}}(\id)$, therefore the proof is complete. \\
 
-Also, the size of \textbf{d} is bounded by $\sigma'\sqrt{n}$, result proved by \textbf{Lemma 2}.
+Also, the size of \textbf{d} is bounded by $\sigma'\sqrt{n}$, result proved by \textbf{Lemma 2}.\\
+
+%%%%%%%%%%%%%%%% Finished Sampling Procedure %%%%%%%%%%%%%%%%%%%%%%%%%
 
 \item \textbf{Encodings at higher levels:} $\textbf{u}_i \la \text{enc(params,}i, \textbf{d})$.
 
@@ -122,5 +128,139 @@ Therefore, every level-one encoding of an element is randomized, in order to pre
 
 Knowing that $b_i \in \hat{0}, \forall i\in \{1,2,..,m\}$ and that $a \in \hat{1}$, it easily follows that $a\textbf{d} + \sum_{i = 1}^{m} r_i \textbf{b}_i \in \hat{\textbf{d}}$. Also, the length of the numerator is upper-bounded by $\sigma^*\cdot$poly$(m,n)$. Also, if the parameters $\textbf{b}_i$ are chosen from a fairly wide enough spherical Gaussian distribution, then from \textbf{Theorem 4} it follows that the distribution of $B\textbf{r}$ is close to a wide ellipsoidal Gaussian. Hence, the distribution of $a\textbf{d} + B\textbf{r}$ is nearly independent of $a\textbf{d}$, so the encoding is truly randomized. 
 
-\textbf{Remark 8.} \textit{Randomization may be performed at any level, not only the first one. Besides, other versions of Graded Encoding Schemes(e.g. \cite{CLT13}) include a procedure for randomization at level-one, denoted \textbf{reRand}. The current setting is more restrictive, but has the advantage that it realizes a randomization for every level-one encoding of an element, reducing the implementation errors due to negligence.}
+\textbf{Remark 8.} \textit{Randomization may be performed at any level, not only the first one. Besides, other versions of Graded Encoding Schemes(e.g. \cite{CLT13}) include a procedure for randomization at level-one, denoted \textbf{reRand}. The current setting is more restrictive, but has the advantage that it realizes a randomization for every level-one encoding of an element, reducing the implementation errors due to negligence.}\\
+
+%%%%%%%%%%%%%%%% Finished High Level Encoding %%%%%%%%%%%%%%%%%%%%%%%%%
+
+\item \textbf{Adding encodings:} \textbf{add}(params, $i, v_1, v_2$)
+
+\begin{tcolorbox}[colframe=black,colback=white,arc=0pt,outer arc=0pt]
+\begin{center}
+$\text{\textbf{add}(params,}i, v_1, v_2)$
+\end{center}
+\begin{algorithmic}[1]
+\State \textbf{Output:} $[v_1+v_2]_q$.
+\end{algorithmic}
+\end{tcolorbox}
+
+The addition in the current settings is a very simple operation, as it can be observed from the one-lined algorithm presented above. To verify the correctness of the addition algorithm, one may consider $v_1, v_2$, two level$-i$ encodings of the cosets $\widehat{e_1}$, respectively $\widehat{e_2}$. Therefore, there exist two elements $c_1 \in \widehat{e_1}, c_2\in\widehat{e_2}$ such that $v_1 = \big[ \frac{c_1}{\zz} \big]_q$ and $v_2 = \big[ \frac{c_2}{\zz} \big]_q$, and $c_1, c_2$ are short vectors. Adding the two encodings yields:
+\begin{center}
+	$[v_1+v_2]_q = \Big[ \big[ \frac{c_1}{\zz} \big]_q + \big[ \frac{c_2}{\zz}\big]_q \Big]_q = \big[\frac{c_1+c_2}{\zz}\big]_q$,
+\end{center}
+with $c_1+c_2 \in \widehat{e_1+e_2}$ and $c_1 + c_2$ a short vector in $R$. Thus, the exposed addition operation is correct.\\
+
+\textbf{Remark 9.} \textit{Addition operation can be extended to support the summation of many elements simultaneously. It can be effortlessly seen that the size of the numerator remains small, even though addition is performed many times (e.g. a number of times polynomial in $n$)}.\\
+
+%%%%%%%%%%%%%%%% Finished Addition %%%%%%%%%%%%%%%%%%%%%%%%%
+
+\item \textbf{Multiplying encodings: mul}(params, $v_i, v_j$).
+
+\begin{tcolorbox}[colframe=black,colback=white,arc=0pt,outer arc=0pt]
+	\begin{center}
+		$\text{\textbf{mul}(params, } v_i, v_j)$
+	\end{center}
+	\begin{algorithmic}[1]
+		\State \textbf{Output:} $[v_i \cdot v_j]_q$.
+	\end{algorithmic}
+\end{tcolorbox}
+
+Multiplication operation is as simple as the addition one. The proof of correctness follows immediately.\\
+Let $v_i$ be a level$-i$ encoding of a coset $\widehat{e_1}$ and let $v_j$ be a level$-j$ encoding of a coset $\widehat{e_2}$, with $0 \leq i, j$ and $i + j \leq k$. Then, using the properties of the construction, one may note that there must exist two vectors, $c_1 \in \widehat{e_1}, c_2 \in \widehat{e_2}$, such that $v_i = \big[ \frac{c_1}{\zz^i}\big]_q$ and  $v_j = \big[ \frac{c_2}{\zz^j}\big]_q$. Performing the multiplication of the encodings, as presented in the algorithm, the result is:
+
+\begin{center}
+	$[v_i \cdot v_j]_q = \Big[ \big[ \frac{c_1}{\zz^i}\big]_q \cdot \big[ \frac{c_2}{\zz^j}\big]_q\Big]_q = \big[ \frac{c_1 \cdot c_2}{\zz^{i+j}} \big]_q$,
+\end{center}
+
+with $c_1 \cdot c_2 \in \widehat{e_1 \cdot e_2}$, and $c_1 \cdot c_2$ a short vector in $R$ (thus unchanged in $R_q$). Hence, the multiplication operation exposed in the algorithm is correct.\\
+
+\textbf{Remark 10.}  \textit{Usually, the applications of Graded Encoding Systems will require to multiply $k$ level-one encodings, thus the property stated at \textbf{Remark 8} also holds true for multiplication operation. As a result, it can be easily noted that the product of $k$ level-one encodings represents a level$-k$ encryption of an element.}\\
+
+%%%%%%%%%%%%%%%% Finished Multiplication %%%%%%%%%%%%%%%%%%%%%%%%%
+
+\item \textbf{Zero testing: } isZero(params, \pzt, $u$)
+
+\begin{tcolorbox}[colframe=black,colback=white,arc=0pt,outer arc=0pt]
+	\begin{center}
+		 \textbf{isZero}(params, \pzt, $u$)
+	\end{center}
+	\begin{algorithmic}[1]
+		\If {$||$\pzt$\cdot u||_\infty \leq q^{\frac{3}{4}}$}
+		\State Set $result = 1$
+		\Else
+		\State Set $result = 0$
+		\EndIf
+		\State \textbf{Output: } $result$
+	\end{algorithmic}
+\end{tcolorbox}
+
+
+In order to test if two encodings represent the same element (obviously, on the same level), it is sufficient to substract them and compare to zero. The zero testing procedure involves a so-called zero-testing parameter and may be used only for level$-k$ encodings. However, despite the fact that the procedure always returns the correct answer for encodings of zero, it also may return (with negligible probability) a false answer for a non-zero encoding. \\
+
+As presented in the instance generation algorithm, the zero-testing parameter is \pzt$=\big[\frac{\textbf{hz}^k}{\textbf{g}}\big]_q$, where $\textbf{h}\la \mathcal{D}_{\bZ^n, \sqrt{q}}$. Also, from the inherent structure of the construction it follows that there exists a short element $c$, such that $u = \big[\frac{c}{\textbf{z}^k}\big]_q$. To prove the \textit{general} faultlessness of the algorithm, it is required to remark that:
+\begin{center}
+	$w=$\pzt$\cdot u = \big[\frac{\textbf{hz}^k}{\textbf{g}}\big]_q \cdot \big[\frac{c}{\textbf{z}^k}\big]_q = \big[ \frac{\textbf{h}\cdot c}{\textbf{g}}\big]_q $.
+\end{center}
+
+\begin{itemize}
+	\item If $u$ \textbf{is an encoding of zero}, then $c \in \hat{0}$, therefore $c \in \id$. Because $\id = \langle g \rangle$, it follows that $c = g \cdot \alpha$, for $\alpha \in R$. Thus, the element $\frac{c}{\textbf{g}}\in R$ is the same element as $c \cdot \textbf{g}^{-1} \in \mathbb{K}$. It follows that $||w||\leq ||\textbf{h}|| \cdot || c || \cdot ||\textbf{g}^{-1}|| \cdot \sqrt{n}^2$. Then, using \textbf{Theorem 4} for the case of choosing $\textbf{h} \la \mathcal{D}_{\bZ^n, \sqrt{q}}$, it can be easily noticed that $||\textbf{h}|| \leq \sqrt{q} \cdot \sqrt{n}$. Corroborating the last two results with the fact that $||\textbf{g}||$ is small (validated by the generation algorithm), it follows that:
+	\begin{center}
+		$||w|| \leq q^{\frac{1}{2}} \cdot \sqrt{n} \cdot q^{\frac{1}{8}} \cdot ||\textbf{g}^{-1}|| \cdot n  \leq q^{\frac{3}{4}}$.
+	\end{center}
+
+\item If $u$ \textbf{is an encoding of a non-zero coset}, then $c \notin \hat{0}$. In order to prove that the value $||w||$ is larger than $q^{\frac{3}{4}}$ with overwhelming probability, one more result must be settled below.\\
+
+
+\textbf{Lemma 3 (Lemma 6.5, \cite{Gar15}).}  \textit{Let $w = \big[\frac{c\textbf{h}}{\textbf{g}}\big]_q$, with the properties: $||\textbf{g}w|| \leq \frac{q}{2}$ and $||c\textbf{h}|| \leq \frac{q}{2}$. If $\langle \textbf{g} \rangle$ is a prime ideal, then either $c$ or $\textbf{h}$ is in the ideal $\textbf{g}$. }\\
+
+Using the same reason as in the first situation, it can be easily seen that $||\textbf{h}|| \leq \sqrt{q} \cdot \sqrt{n}$, with overwhelming probability. Then, because $||c|| \leq q^{\frac{1}{8}}$ (from the intrinsic structure of the construction), it follows that:
+\begin{center}
+	 $||c\cdot \textbf{h}|| \leq \sqrt{n} \cdot q ^{\frac{1}{2}} \cdot q^{\frac{1}{8}} \cdot \sqrt{n} = q^{\frac{5}{8}} \cdot n < \frac{q}{2}$. (1)
+\end{center}
+
+ \textbf{Supposing} that there exists $\epsilon > 0$ such that $||w|| \leq q^{1-\epsilon}$, then $||w\textbf{g}|| < q^{1-\epsilon} \cdot ||\textbf{g}|| \cdot \sqrt{n}$ and because $||g||$ is polynomial in $n$, it directly results that:
+ \begin{center}
+ 	  $||w\textbf{g}|| < \frac{q}{2}$. (2)
+ \end{center}
+ Using the results (1) and (2) in collaboration with \textbf{Lemma 3}, it follows that either $c$ or $\textbf{h}$ is in the ideal $\langle \textbf{g} \rangle$, which is a \textbf{contradiction}, because $c \notin \hat{0}$ and $\textbf{h} \notin \id$. Then, for any $\epsilon > 0,$ $||w|| \geq q^{1-\epsilon}$, therefore $||w|| \geq q^{\frac{3}{4}}$.
+\end{itemize}
+
+\textbf{Remark 11.} \textit{The zero testing algorithm could have been written in a more condensed (and elegant) manner. However, in order to keep the same structure of the algorithm throughout the chapter, the current version was adopted.}\\
+
+%%%%%%%%%%%%%%%% Finished Zero Testing %%%%%%%%%%%%%%%%%%%%%%%%%
+
+\item \textbf{Extraction: } $r\la$ ext(params, \pzt, $u$)
+
+\begin{tcolorbox}[colframe=black,colback=white,arc=0pt,outer arc=0pt]
+	\begin{center}
+		\textbf{ext}(params, \pzt, $u$)
+	\end{center}
+	\begin{algorithmic}[1]
+		\State Set $M = \textbf{msbs}_{\frac{\log q}{4} - \lambda} \big([u \cdot $\pzt$]_q\big)$
+		\Statex
+		\State \textbf{Output:}  EXTRACT$_s(M)$
+	\end{algorithmic}
+\end{tcolorbox}
+
+The extraction procedure is fairly simple. First, given $u,$ a valid level$-k$ representation of a coset, multiply it with {\pzt} (in $R_q$). Then extract the most significant $\frac{\log q}{4} - \lambda$ bits of \textit{each} of the coefficients of the result. Finally, apply a strong randomness extractor on the resulted bits. The algorithm was divided in two steps in order to stress its dual importance.\\
+
+ The first step realizes a \textit{canonicalization} of cosets representation (the extraction procedure, applied to two different encodings of the same coset, must return the same result). On the other side, the second step performs a \textit{randomization} of the result, so that an external observer will not be capable to generate a valid standard representation of a desired coset. \\
+ 
+ The correctness of the first step is further discussed. Let $\widehat{e_1}, \widehat{e_2} \in R/\id$ be two cosets, let $u_1 = \big[ \frac{c_1}{\zz^k} \big]_q$ and let $u_2 = \big[ \frac{c_2}{\zz^k} \big]_q$, with $c_1 \in \widehat{e_1}, c_2 \in \widehat{e_2}$.
+ \begin{itemize}
+ 	\item If $\widehat{e_1} = \widehat{e_2}$, then $u_1$ and $u_2$ are \textbf{encodings of the same coset}. Then, using the results from \textit{zero-testing procedure}, it follows that $||$\pzt$u_1 - $\pzt$u_2|| = || $ \pzt $(u_1 - u_2)|| \leq q^{\frac{3}{4}}$. Therefore, with overwhelming probability, the most significant $\frac{\log q}{4}$ bits of every coefficient of (\pzt$u_1 - $\pzt$u_2$) are equal to 0, hence \pzt$u_1$ and \pzt$u_2$ have the same most significant ($\frac{\log q}{4} - \lambda$) bits for each coefficient. So, the same result is returned by the procedure for $u_1$ and $u_2$.
+ 	
+ 	\item If $\widehat{e_1} \neq \widehat{e_2}$, then $u_1$ and $u_2$ are \textbf{encodings of different cosets}. Therefore, it is known from \textit{zero-test procedure} that for every $\epsilon > 0$, $||$\pzt$(u_1-u_2)|| \geq q^{1 - \epsilon}$. It is now obvious that \pzt$u_1$ and \pzt$u_2$ do not have the same most significant ($\frac{\log q}{4} - \lambda$) bits for each coefficient, hence the procedure returns different results for $u_1$ and $u_2$.
+ \end{itemize}
+
+
+
+\textbf{Remark 12.} \textit{The element given as parameter to the Extract procedure must be a valid level$-k$ representation of a coset in $R/\id$. This information is used within the proof of correctness for the procedure, hence on other levels of encoding, the behavior is undefined.}
+
+%%%%%%%%%%%%%%%% Finished Extraction Procedure %%%%%%%%%%%%%%%%%%%%%%%%%
+
 \end{enumerate}
+
+\section{Parameter constraints}
+
+All of the above procedures rely on appropriate settings for the parameters, especially regarding the width of the Gaussian distributions. 
+
