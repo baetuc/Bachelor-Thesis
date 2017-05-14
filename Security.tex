@@ -1,1 +1,15 @@
 \chapter {Security}
+
+In order to realize an implementation of the GES scheme presented at \textbf{Chapter 3}, it must be proved to be secure, at least in a theoretical manner. The security study started even from the original paper of Garg, Gentry and Halevi, where the weaknesses of Discrete Logarithm on level smaller than $k$, along with averaging attacks are discussed.\\
+
+Furthermore, after the publication of the paper, there followed a sum of attacks on the scheme, that would break some security assumptions, such as $\mathcal{DLIN}$. The initial ones, known as "zeroizing" attacks, used the public level-one encodings of zero in order to crack some assumptions. Then, extended weak Discrete Logarithm attacks were set up even in constructions without public encryptions of zero. One of the latest results over the security of the scheme is represented by the \textit{annihilation attacks}, exposed in \cite{MSZ16}.\\
+
+As depicted in the previous chapter, one of the applications of the scheme is \textit{indistinguishability obfuscation}. One of the main advantages of iO is that they do not require the existence of public encodings of zero. Because most of the attacks over \textit{GGH13} scheme are based on the presence of the aforementioned public representations of zero, it follows that iO schemes remain secure.\\
+
+However, a new kind of attack was presented in 2016 by Miles, Sahai and Zhandry in \cite{MSZ16}. They conceived the first polynomial-time cryptanalysis of candidate iO schemes over \textit{GGH13}, using \textit{annihilation attacks}. Therefore, even the future of iO implementations may become dark, and further analysis and fixes are required. \\
+
+The first attack to be presented in the current chapter is a "zeroizing" one, followed closely by attacks that could be mounted in the assumption that some elements could be found. Finally, the principle of \textit{averaging attacks} is overviewed, as an ending of the chapter and as the paper as well.
+
+\section{A zeroizing attack}
+
+A
