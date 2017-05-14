@@ -202,7 +202,7 @@ As presented in the instance generation algorithm, the zero-testing parameter is
 \end{center}
 
 \begin{itemize}
-	\item If $u$ \textbf{is an encoding of zero}, then $c \in \hat{0}$, therefore $c \in \id$. Because $\id = \langle g \rangle$, it follows that $c = g \cdot \alpha$, for $\alpha \in R$. Thus, the element $\frac{c}{\textbf{g}}\in R$ is the same element as $c \cdot \textbf{g}^{-1} \in \mathbb{K}$. It follows that $||w||\leq ||\textbf{h}|| \cdot || c || \cdot ||\textbf{g}^{-1}|| \cdot \sqrt{n}^2$. Then, using \textbf{Theorem 4} for the case of choosing $\textbf{h} \la \mathcal{D}_{\bZ^n, \sqrt{q}}$, it can be easily noticed that $||\textbf{h}|| \leq \sqrt{q} \cdot \sqrt{n}$. Corroborating the last two results with the fact that $||\textbf{g}||$ is small (validated by the generation algorithm), it follows that:
+	\item If $u$ \textbf{is an encoding of zero}, then $c \in \hat{0}$, therefore $c \in \id$. Because $\id = \langle g \rangle$, it follows that $c = g \cdot \alpha$, for $\alpha \in R$. Thus, the element $\frac{c}{\textbf{g}}\in R$ is the same element as $c \cdot \textbf{g}^{-1} \in \mathbb{K}$. It follows that $||w||\leq ||\textbf{h}|| \cdot || c || \cdot ||\textbf{g}^{-1}|| \cdot \sqrt{n}^2$. Then, using \textbf{Theorem 3} for the case of choosing $\textbf{h} \la \mathcal{D}_{\bZ^n, \sqrt{q}}$, it can be easily noticed that $||\textbf{h}|| \leq \sqrt{q} \cdot \sqrt{n}$. Corroborating the last two results with the fact that $||\textbf{g}||$ is small (validated by the generation algorithm), it follows that:
 	\begin{center}
 		$||w|| \leq q^{\frac{1}{2}} \cdot \sqrt{n} \cdot q^{\frac{1}{8}} \cdot ||\textbf{g}^{-1}|| \cdot n  \leq q^{\frac{3}{4}}$.
 	\end{center}
@@ -262,5 +262,76 @@ The extraction procedure is fairly simple. First, given $u,$ a valid level$-k$ r
 
 \section{Parameter constraints}
 
-All of the above procedures rely on appropriate settings for the parameters, especially regarding the width of the Gaussian distributions. 
+All of the above procedures rely on appropriate settings for the parameters, especially regarding the width of the Gaussian distributions. The constraints will be explained in-depth for every choice of parameter value.\\
+
+\begin{itemize}
+	\item $\bm{\sigma = \sqrt{\lambda n}}$. The parameter $\sigma$ defines the width of the first involved Gaussian, used for extraction of the generator $\textbf{g}$. The parameter must satisfy $\sigma \geq \eta_{2^{-\lambda}}$, so setting $\sigma = \sqrt{\lambda n}$ is safe. Note that, using \textbf{Theorem 3}, $||g|| \leq \sigma \sqrt{n} = n \sqrt{\lambda}$, with overwhelming probability.
+	
+	\item $\bm{\sigma' = \lambda n^{\frac{3}{2}}}$. In the paragraphs reserved for \textit{sampling} procedure, it was explained why $\sigma'$ should be lower bounded by $||g|| \cdot \sqrt{\lambda n}$. Using the upper bound for $||g||$, it follows that $\sigma' = \lambda n^{\frac{3}{2}}$ is a good parameter choice.
+	
+	\item $\bm{\sigma^* = 2^{\lambda}}$. Parameter $\sigma^*$ defines the width of the Gaussian distribution used to draw the randomization vector $\textbf{r}$ from \textit{higher level encoding} procedure. In order to apply \textbf{Theorem 4}, $\sigma^*$ must satisfy: $\sigma^* > poly(n,m,\lambda)$. Also, for the numerator of the randomized encoding to become independent of the numerator before the randomization, it suffices that $\sigma^* = 2^{\lambda}$. With this value for $\sigma^*$, a level-one encoding of a coset takes the form $\big[ \frac{c}{\zz} \big]_q$, with $||c|| \leq 2^\lambda \cdot poly(n)$.
+	
+	\item $\bm{q = 2^{8k\lambda} \cdot n^{O(k)}}$. Usually, applications of \textit{Graded Encoding Schemes} compute a level$-k$ encoding of a coset by multiplying $k$ level-one representations of cosets. Using the result above regarding the upper bounds for numerators of level-one encodings, it follows that the numerator of a level$-k$ representation will be upper bounded by: $(2^\lambda \cdot poly(n))^k$. Thus, in order for the product to be considered a valid encoding (which means that the size of numerator should not exceed $q^{\frac{1}{8}}$), it is necessary that: $(2^\lambda \cdot poly(n))^k \leq q^{\frac{1}{8}}$. Finally, by setting $q = 2^{8k\lambda} \cdot n^{O(k)}$ it is ensured that the value of $q$ is big enough for all the operations to be performed in a safe manner.
+	
+	\item $\bm{n > O(k\lambda^2)}$. For the scheme to assure a security level of $\lambda$, it is needed that $q < 2^{\frac{n}{\lambda}}$. Therefore, using the above restriction for $q$, it immediately results that $n > O(k \lambda^2)$.
+	
+	\item $\bm{m = O(n^2)}$. In order to apply \textbf{Theorem 4} during \textit{higher level encodings} proof of correctness, it is needed that $m > n \log q$. From the previous bounds for $q$ and $n$, it yields that $m = O(n^2)$.
+\end{itemize}
+
+\section{Hardness Assumptions}
+
+This section is linked directly to \textbf{Subsection 1.4.2} by presenting the \textbf{GDL} and \textbf{GDDH} problems and their implications in the current settings.
+
+\begin{enumerate}
+	\item \textbf{Graded Discrete Logarithm (GDL).} \textit{It is said that the GDL problem is hard for a Graded Encoding System $GES$ if for all probabilistic polynomial running time algorithms, the discrete logarithm advantage of an adversary $\mathcal{A}$,}
+	
+	\begin{center}
+		AdvDlog$_{GES, \mathcal{A}, k}(\lambda) \stackrel{\mathclap{\normalfont\mbox{def}}}{=} \Pr[\mathcal{A}(params,$ {\pzt}, $u) = a : (params, $ {\pzt}) $\la$ InstGen$(1^\lambda, 1^k), c \in R, u = \big[ \frac{c}{\zz^k} \big]_q, a\in \hat{c} $,
+	\end{center}
+	
+	\textit{is negligible in $\lambda$.}\\
+	
+	\textbf{Remark 13.} \textit{The vigilant reader may note that the \textbf{GDL} problem is only defined for level$-k$ encodings of cosets. That is because if the element $u$ is a valid level$-i$ representation, with $1 \leq i < k$, the problem may become weak, as explained in \cite{GGH13}, Section 4.4}.
+
+\end{enumerate}
+	
+In order to introduce the \textbf{GDDH} problem, it is required to define an algorithm that generates a \textbf{GDDH} instance, as the one presented in \cite{Gar15}, Section 7.1:\\
+
+\begin{tcolorbox}[colframe=black,colback=white,arc=0pt,outer arc=0pt]
+	\begin{center}
+		\textbf{genGDDH(params, \pzt)}
+	\end{center}
+	\begin{algorithmic}[1]
+		\State Choose $\textbf{f} \la \mathcal{D}_{\bZ^n, \sigma}$. \Comment Level-zero encoding of a random coset
+		\For {$i = 0$ to $k$}
+		\State Choose $\textbf{e}_i \la \mathcal{D}_{\bZ^n, \sigma}$ \Comment Level-zero encoding of a random coset
+		\State Choose $\textbf{r}_i \la \mathcal{D}_{\bZ^m, \sigma^*}$ \Comment Randomization vector
+		\State Set $u_i = \big[\textbf{e}_i\textbf{y} + \sum_{j=1}^{m} r_j \xx_j \big]_q$ \Comment Randomized lvl-1 encoding of $\textbf{e}_i$
+		\EndFor
+		
+		\State Set $u^* = \big[ \prod_{i = 1}^{k} u_ i\big] _q$  \Comment Level-$k$ encoding of last $k$ elements product
+		\State Set $v = [\textbf{e}_0 \cdot u^*]$ \Comment Level-$k$ encoding of the $k+1$ elements
+		\State Set $v' = [\textbf{f} \cdot u^*]$ \Comment Level$-k$ encoding of other $k+1$ elements
+		\State \textbf{Output:} $(u_0, u_1, ..., u_k, v, v')$.
+	\end{algorithmic}
+\end{tcolorbox}
+
+	
+	\begin{enumerate}
+	 \setcounter{enumi}{1}
+
+	\item \textbf{Graded DDH (GDDH). } \textit{The GDDH problem is hard for a Graded Encoding System $GES$ if for any probabilistic polynomial running time algorithm $\mathcal{A}$, the advantage of $\mathcal{A}$ in distinguishing between the distributions:}
+	
+	\begin{center}
+		(params, {\pzt}$, u_0, ... ,u_k, v$ ) and \\
+		(params, {\pzt}$, u_0, ... ,u_k, v'$)
+	\end{center}
+	\textit{is negligible in $\lambda$, where $(params, $ {\pzt} $)\la$ InstGen$(1^\lambda, 1^k)$ and $(u_0, u_1, ..., u_k, v, v') =$ \textbf{genGDDH}(params, \pzt).}
+\end{enumerate} 
+
+\section{Applications}
+
+
+
+
 
