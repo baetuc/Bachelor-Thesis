@@ -2,7 +2,7 @@
 
 In order to realize an implementation of the GES scheme presented at \textbf{Chapter 3}, it must be proved to be secure, at least in a theoretical manner. The security study started even from the original paper of Garg, Gentry and Halevi, where the weaknesses of Discrete Logarithm on level smaller than $k$, along with averaging attacks are discussed.\\
 
-Furthermore, after the publication of the paper, there followed a sum of attacks on the scheme, that would break some security assumptions, such as $\mathcal{DLIN}$. The initial ones, known as "zeroizing" attacks, used the public level-one encodings of zero in order to crack some assumptions. Then, extended weak Discrete Logarithm attacks were set up even in constructions without public encryptions of zero. One of the latest results over the security of the scheme is represented by the \textit{annihilation attacks}, exposed in \cite{MSZ16}.\\
+Furthermore, after the publication of the paper, there followed a sum of attacks on the scheme, that would break some security assumptions, such as \textit{Subgroup Membership} ($SubM$) or \textit{Decision Linear} ($DLIN$). The initial ones, known as "zeroizing" attacks, used the public level-one encodings of zero in order to crack some assumptions. Then, extended weak Discrete Logarithm attacks were set up even in constructions without public encryptions of zero. One of the latest results over the security of the scheme is represented by the \textit{annihilation attacks}, exposed in \cite{MSZ16}.\\
 
 As depicted in the previous chapter, one of the applications of the scheme is \textit{indistinguishability obfuscation}. One of the main advantages of iO is that they do not require the existence of public encodings of zero. Because most of the attacks over \textit{GGH13} scheme are based on the presence of the aforementioned public representations of zero, it follows that iO schemes remain secure.\\
 
@@ -12,4 +12,106 @@ The first attack to be presented in the current chapter is a "zeroizing" one, fo
 
 \section{A zeroizing attack}
 
-A
+The "zeroizing" attack is also called \textit{weak discrete logarithm attack}. It was discovered soon after the publication of GGH construction \cite{GGH13}, and it lead to the break of $SubM$ and $DLIN$ problems, considered to be secure in the initial paper. As no similar attack was designed for CLT13 scheme \cite{CLT13} very fast, the analogue system designed by Coron, Lepoint and Tibouchi was thought to provide secure $DLIN$ and $SubM$ instantiation. However, in \cite{CKC+15} an attack was designed for the CLT scheme, so powerful that lead to a total break, i.e. all private parameters could be efficiently recovered.\\
+
+\begin{tcolorbox}[colframe=black,colback=white,arc=0pt,outer arc=0pt]
+	\begin{center}
+		\textbf{Zeroizing attack (Weak Discrete Logarithm)}
+	\end{center}
+	\begin{algorithmic}[1]
+		\For {$i$ from 1 to $l$}
+		\State Given $u_i = \big[ \frac{\textbf{d}_i}{\zz^{s_i}} \big]_q$, with $1 \leq s_i < k$, compute $\textbf{f}_i = [u_i \cdot \xx_j \cdot$\pzt$\cdot \textbf{y}^{k - s_i - 1}]_q$.
+		\EndFor
+		\State Using $\textbf{f}_1, \textbf{f}_2, ..., \textbf{f}_l$, compute a basis of $\id$.
+	\end{algorithmic}
+\end{tcolorbox}
+~\\
+The zeroizing attack is based on the existence of public encodings of zero, namely $\xx_1,..., \xx_m$ and the public encoding of one, $\textbf{y}$. Particularly, for any fixed $j \in \{1,2,...,m\}$, consider the level-one representation of zero, $\xx_j = \big[ \frac{\textbf{b}_j}{\zz} \big]_q$, with $\textbf{b}_j \in \hat{0}$. Because $\textbf{b}_j \in \hat{0}$, therefore there exists a short $c_j$ such that $\textbf{b}_j = c_j \cdot \textbf{g}$. Thus, $\xx_j = \big[ \frac{c_j \cdot \textbf{g}}{\zz} \big]_q$.\\
+
+Then, if the attacker may obtain valid representations of elements on levels lower than $k$ (and for each encoding, he knows the specific level), he may succeed in his attack. Suppose the attacker knows $l$ valid elements, $u_i = \big[ \frac{\textbf{d}}{\zz^{s_i}} \big]_q, \forall i \in \{1,2,...,l\}$. Then, for each element, he can compute, as exemplified in \cite{Gar15}:
+
+\begin{center}
+	$\textbf{f}_i = [u_i \cdot \xx_j \cdot$\pzt$\cdot \textbf{y}^{k - s_i - 1}]_q = \big[ \frac{\textbf{d}_i}{\zz^i} \cdot \frac{c_j \cdot \textbf{g}}{\zz} \cdot \frac{\textbf{h}\zz^k}{\textbf{g}} \cdot \frac{\textbf{a}^{k- i - 1}}{\zz^{k-i-1}}\big]_q=$
+	
+\end{center}
+	
+\begin{center}
+	$= [\textbf{d}_i \cdot c_j \cdot \textbf{h} \cdot \textbf{a}^{k-i-1}]_q \stackrel{\mathclap{\normalfont\mbox{\scriptsize{(1)}}}}{=} \textbf{d}_i \cdot c_j \cdot \textbf{h} \cdot \textbf{a}^{k-i-1} \equiv (\textbf{d}_i \cdot \underbrace{c_j \cdot \textbf{h} }_{\Delta_j} )   (\mod \id)$.
+
+\end{center}
+
+The equality (1) holds because the value: $\textbf{d}_i \cdot c_j \cdot \textbf{h} \cdot \textbf{a}^{k-i-1}$ is significantly lower than $q$, therefore the element reduced modulo $q$ has the same representation as the element without the reduction. The vigilant reader may note that $\Delta_j$ is invariant of $\xx_j$. Thus from a level-$s_i$ encoding of $\textbf{d}_i$ represented by $u_i$, an attacker could compute the value $\textbf{f}_i \in \widehat{\textbf{d}_i \cdot\Delta_j}$.\\
+
+Consider that $||\Delta_j|| \approx ||\textbf{h} || =  O(\sqrt{q})$, therefore $||\textbf{f}_i||> q^{\frac{1}{2}}$ with overwhelming probability. Thus $\textbf{f}_i $ is not upper-bounded by the correct value in order to represent a valid level-zero encoding of an element.\\
+
+Hence, applying this procedure for all the public $\xx_j$'s, the attacker will have at discretion many elements from the ideal $\langle \textbf{h} \rangle$. From all the elements recovered, he may recover a basis of the principal ideal lattice $\langle \textbf{h} \rangle$. Therefore, it will be fairly easy to construct a basis for the fractional principal ideal $\big\langle\frac{1}{\textbf{h}} \big \rangle$ in $\mathbb{K}$.\\
+
+Using a similar algorithm as the one presented above, the attacker may recover a basis for the principal ideals $\langle\textbf{h} \cdot \textbf{g} \rangle$ and $\langle \textbf{h} \cdot \textbf{a} \rangle$. Utilizing the found basis for $\big\langle\frac{1}{\textbf{h}} \big \rangle$, then a basis for $\langle \textbf{a} \rangle$ and $\langle \textbf{g} \rangle = \id$ may be easily found.\\
+
+The conclusion of the current subsection is that the ideal $\id$ cannot remain entirely hidden, but also that finding a small basis for it is still hard, therefore the construction is viable, as its complete break is realized by finding the small generator $\textbf{g}$ of $\id$.\\
+
+
+
+It must be noted that the zeroizing attack does not affect \textbf{GDDH} assumption, as the level of the known elements must be less than $k$ in order to take part of the algorithm. However, it is obvious that the presence of the public level-one encodings of zero represent a vulnerability of the construction. Therefore, in order to be able to ensure $SubM$ and $DLIN$ security, the system must provide different methods to randomize the encoding procedure at level one, without the usage of the aforementioned public parameters.
+
+\section{Attacks with known elements}
+
+As the title suggests, the section will evaluate the amount of damage that could be realized to the security of the construction, in the assumption that several particular elements could be available to the attacker.\\
+
+The analysis is performed regarding the \textbf{GDDH} problem, with the known parameters of the scheme, but also with the parameters bound to the \textbf{GDDH} instance, which are similar to the output of \textbf{genGDDH} algorithm:
+
+\begin{itemize}
+	\item $u_i = \big[ \frac{e_i}{\zz} \big]_q$, for $i \in \{0,1,...,k\}$ - $k+1$ level-one encodings of random elements, with $||e_i|| < 2^\lambda \sigma \sqrt{n}, \forall i \in \{0,1,...,k\}$;
+	
+	\item $w = \big[ \frac{c}{\zz^k} \big]_q$ - the challenge element, which represents the level$-k$ encoding of $\displaystyle{\prod_{i = 0}^{k} e_i}$ or of a random coset of $R/\id$.
+\end{itemize}
+
+\subsection {A short element of the ideal $\id$}
+
+
+\begin{tcolorbox}[colframe=black,colback=white,arc=0pt,outer arc=0pt]
+	\begin{center}
+		\textbf{Attack with a known short element of $\id$}\\
+		(Suppose that the known element is $\textbf{dg}$)
+	\end{center}
+	\begin{algorithmic}[1]
+		\State Set $\textbf{p}_{zt}' = [\textbf{dg} \cdot \textbf{p}_{zt}]_q$.
+		\Statex
+		\State Set $v_1 = [\textbf{p}_{zt}' \cdot w]_q$.
+		\Statex
+		\State Set $v_2 = \Bigg[ \textbf{p}_{zt}' \cdot \displaystyle{\prod_{i = 1}^{k} u_i} \Bigg]_q$.
+		\Statex
+		\State Set $e^{sup}_0 = v_1 \text{ div } v_2 (\text{mod } \id)$. \Comment Element to be compared to $e_0$
+		\Statex
+		\State Compute $u_0^{sup} = e_0^{sup} \cdot \textbf{y}$.	 \Comment Level-one encoding of $e_0^{sup}$
+		\Statex
+		\State \textbf{Output:} \textbf{isZero}(params, \pzt, $u_0 - u_0^{sup}$). 
+	\end{algorithmic}
+\end{tcolorbox}
+~\\
+
+The flow of the algorithm is fairly natural, as it can be observed from the step-by-step explanation above. The proof of correctness follows immediately. \\
+
+First, suppose that $w$ is a level$-k$ encoding of $\displaystyle{\prod_{i = 0}^{k} e_i}$. Thus, there exists a vector $c$ such that $w = \Big[ \frac{c \textbf{g} + \prod_{i = 0}^{k} e_i}{\zz^k} \Big]_q.$ Let the short element in $\id$ be $\textbf{dg}$, with $\textbf{d}$ a small vector. Then, a modified zero-test parameter will be computed, $\textbf{p}_{zt}' = [\textbf{dg} \cdot \textbf{p}_{zt}]_q = [\textbf{d} \cdot \textbf{h} \cdot \zz^k]_q$. Multiplying $\textbf{p}_{zt}'$ by both $w$ and $\displaystyle{\prod_{i = 1}^{k} u_i}$, it yields:
+
+\begin{center}
+	$
+	\begin{cases}
+			v_1 = [\textbf{p}_{zt}' \cdot w]_q \\
+			 v_2 = \bigg[ \textbf{p}_{zt}' \cdot \displaystyle{\prod_{i = 1}^{k} u_i} \bigg]_q
+	\end{cases}
+	 \implies 
+		\begin{cases}
+	v_1 = \textbf{d} \cdot \textbf{h} \cdot \bigg( c\textbf{g} + \displaystyle{\prod_{i = 0}^{k} e_i} \bigg) \\
+	v_2 = \textbf{d} \cdot \textbf{h} \cdot \displaystyle{\prod_{i = 1}^{k} e_i}
+	\end{cases}.
+	$
+	
+\end{center}
+
+Next, 
+
+
+\subsection{A small multiple of $\frac{1}{h}$}
+
+\subsection{A small multiple of $hg^r$}
