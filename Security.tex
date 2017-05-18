@@ -104,14 +104,105 @@ First, suppose that $w$ is a level$-k$ encoding of $\displaystyle{\prod_{i = 0}^
 		\begin{cases}
 	v_1 = \textbf{d} \cdot \textbf{h} \cdot \bigg( c\textbf{g} + \displaystyle{\prod_{i = 0}^{k} e_i} \bigg) \\
 	v_2 = \textbf{d} \cdot \textbf{h} \cdot \displaystyle{\prod_{i = 1}^{k} e_i}
-	\end{cases}.
+	\end{cases} (1).
 	$
 	
 \end{center}
 
-Next, 
+Next, it can be easily seen that the quantity $e_0^{sup} = v_1 \text{ div } v_2\text{ (mod }\id)$ must be congruent with $e_0 \text{ (mod }\id)$. In order to calculate $e_0^{sup}$, one must compute the Hermite Normal Form (HNF) of the lattice, using the basis found using the zeroizing attack. Knowing that the HNF basis has the first element of the main diagonal equal to $N(\id)$, the attacker could easily find the norm of the ideal.\\
 
+Let $\mu_1 = v_1 \text{ (mod }N(\id))$ and let $\mu_2 = v_2 \text{ (mod }N(\id))$. Because $N(\id) \in \bZ$, then $\mu_1, \mu_2 \in \bZ$. Also $N(I) \in \id$, thus:
+\begin{center}
+ $\mu_1 \equiv v_1 \text{ (mod }\id) $ and $\mu_2 \equiv v_2 \text{ (mod }\id)$. (2)
+ \end{center}
+
+Using relations (1) and (2) and the fact that $\id = \langle \textbf{g} \rangle$, it follows immediately that: 
+
+\begin{center}
+	$
+	\begin{cases}
+	\mu_1 \equiv v_1 \equiv \textbf{d} \cdot \textbf{h} \cdot \displaystyle{\prod_{i = 0}^{k} e_i}  \text{ (mod }\id)  \\
+	\mu_2 \equiv v_2 \equiv \textbf{d} \cdot \textbf{h} \cdot \displaystyle{\prod_{i = 1}^{k} e_i}  \text{ (mod }\id)
+	\end{cases}.
+	$
+\end{center}
+
+Using the relations above, it can be easily seen that $\mu_2 \cdot e_0 \equiv \textbf{d} \cdot \textbf{h} \cdot e_0 \cdot \displaystyle{\prod_{i = 1}^{k} e_i}  \text{ (mod }\id)$, therefore:
+
+\begin{center}
+	$\mu_2 \cdot e_0 \equiv \mu_1 \text{ (mod }\id) $ (3).
+\end{center}
+
+Supposing that $\mu_2 \in \bZ_{N(\id)}^*$, let $\eta = \mu_1 \cdot \mu_2^{-1} \text{ (mod }N(\id))$. Then, $\eta \cdot \mu_2 \equiv \mu_1 \text{ (mod }N(\id))$ and knowing that $N(\id) \in \id$, it follows that: 
+\begin{center}
+	$\mu_2 \cdot \eta \equiv \mu_1 \text{ (mod }\id)$ (4).
+\end{center}
+
+Using relations (3) and (4) and the fact that $\mu_2$ is coprime with $N(\id)$, it results that $\eta \equiv e_0 \text{ (mod }\id)$. Reducing $\eta$ modulo the short rotation basis of $\textbf{dg}$, which is obviously small, because $\textbf{dg}$ itself is small, it results a short element $e_0^{sup} \equiv e_0 \text{ (mod }\id)$. \\
+
+Therefore, an attacker could recover a valid level-zero representation of the coset $\widehat{e_0}$, and immediately compute the level-one representation of it, $u_0^{sup} = e_0^{sup} \cdot \textbf{y}$. Then, the result of \textbf{isZero}($u_0 - u_0^{sup}$) is returned, which is \textbf{true}, in this case. In the case that $w$ is not a level$-k$ representation of the product $\displaystyle{\prod_{i = 0}^{k}e_i}$, the same argument as above may be applied to observe that $e_0^{sup} \notin \widehat{e_0}$, therefore the procedure \textbf{isZero} will return \textbf{false}. Thus, the algorithm is correct and it may be mounted by an attacker in order to solve the \textbf{GDDH} problem in the GGH13 construction.
 
 \subsection{A small multiple of $\frac{1}{h}$}
 
+\begin{tcolorbox}[colframe=black,colback=white,arc=0pt,outer arc=0pt]
+	\begin{center}
+		\textbf{Attack with a known short multiple of $\frac{1}{\textbf{h}}$}\\
+		(Suppose that the known element is $\vv = \frac{\textbf{d}}{\textbf{h}}$)
+	\end{center}
+	\begin{algorithmic}[1]
+		\State Set $\textbf{p}_{zt}' = [\vv \cdot \textbf{p}_{zt}]_q$.
+		\Statex
+		\State Set $\textbf{p}_{zt}'' = [(\textbf{p}_{zt}')^2 \cdot \xx_0]_q$. \Comment Zero-test parameter for level $2k-1$
+		\Statex
+		\State Set $w' = [w \cdot \textbf{y}^{k-1}]_q$. \Comment Lift $w$ with $k-1$ levels, therefore $w'$ is on level $2k-1$
+		\Statex
+		\State Set $p' = \bigg[ \displaystyle{\textbf{y}^{k-2} \cdot \prod_{i = 0}^{k} u_i} \bigg]$. \Comment Lift $p$ with $k-2$ levels, therefore $p'$ is on level $2k-1$
+		\Statex
+		\State \textbf{Output:} \textbf{isZero}(params, $\textbf{p}_{zt}'', w' - p'$). \Comment Test for zero on level $2k-1$
+	\end{algorithmic}
+\end{tcolorbox}
+~\\
+
+An ingenuous attacker may note that the availability of a zero-test parameter on any level higher than $k$ would lead to a simple, yet devastating attack. Suppose that $\textbf{p}_{zt}'$ is a level$-k'$ zero test parameter, with $k' > k.$ Then, the attacker may lift the challenge element $w$ to level $k'$ by multiplying it with $\textbf{y}^{k' - k}$. Soon after, he may also lift the product $\displaystyle{\prod_{i = 0}^{k} u_i}$ to level $k'$, by multiplying it with $\textbf{y}^{k' - k -1}$ (note that the condition $k' > k$ is essential). Therefore, the attacker knows a level$-k'$ representation of the desired product, but also a level$-k'$ representation of the challenge element. Thus, he may use the zero-test parameter on level $k'$ to decide whether or not the two elements encode the same coset.\\
+
+It can be shown that a level$-(2k)$ zero-test parameter can be constructed from a small multiple of $\frac{1}{\textbf{h}}$, as presented in \cite{GGH13}. Let $\vv = \frac{\textbf{d}}{\textbf{h}}$ be the small multiple of $\frac{1}{\textbf{h}}$. The attacker may compute the quantity $\textbf{p}_{zt}' = [\vv \cdot \textbf{p}_{zt}]_q = \Big[\frac{\textbf{d}\zz^k}{\textbf{g}} \Big]_q$ and afterwards $\textbf{p}_{zt}'' = [(\textbf{p}_{zt}')^2 \cdot \xx_0]_q = \Big[\frac{\textbf{d}^2 \textbf{z}^{2k}}{\textbf{g}^2} \cdot \frac{\textbf{b}_0 \textbf{g}}{\textbf{z}} \Big]_q = \Big[ \frac{(\textbf{d}^2\textbf{b}_0) \cdot \zz^{2k-1}}{\textbf{g}} \Big]_q$. Therefore, reminding that a level$-k$ zero test parameter is some $\textbf{p}_{zt} = \Big[ \frac{\textbf{hz}^k}{\textbf{g}} \Big]_q$, it follows that the constructed $\textbf{p}_{zt}''$ is a valid level$-(2k-1)$ zero-test parameter.\\
+
+Thus, an attacker that knows a short multiple of $\frac{1}{\textbf{h}}$ may construct a level$-(2k-1)$ zero-test parameter and then mount an attack that solves \textbf{GDDH} in polynomial time.\\
+
+\textbf{Remark 14.} \textit{The algorithm is correct for $k \geq 2$. However, the case $k < 2$ is impractical, and even $k = 2$ refers to bilinear maps, which may be constructed in a different way (e.g. using Weil-Tate pairings).}\\
+
+\textbf{Remark 15.} \textit{The paper \cite{GGH13} contains a \textbf{mistake} in Section 6.3.3, by considering $\xx_0 = [\textbf{b}_0 \textbf{g}]_q$, which is not the way the element is constructed. In the current paper, the mistake is rectified, therefore the zero-test parameter is valid for level $(2k-1)$ and not for level $2k$, as stated in \cite{GGH13}.}
+
 \subsection{A small multiple of $hg^r$}
+
+\begin{tcolorbox}[colframe=black,colback=white,arc=0pt,outer arc=0pt]
+	\begin{center}
+		\textbf{Attack with a known short multiple of $\textbf{hg}^r$}\\
+		(Suppose that the known element is $\vv = \textbf{d} \cdot \textbf{hg}^r$)
+	\end{center}
+	\begin{algorithmic}[1]
+		\State Set $\vv' = \sqrt[r]{\vv}$. \Comment An approximation of \textbf{g}
+		\Statex
+		\State Recover $\textbf{g}$ from $\vv'$.
+		\Statex
+		\State \textbf{Output:} Found $\textbf{g}$.
+	\end{algorithmic}
+\end{tcolorbox}
+~\\
+
+Suppose that that attacker knows the quantity $\vv = \textbf{d} \cdot \textbf{hg}^r$, for a large value of $r$. Because $\textbf{dh}$ is independent of $\textbf{g}^r$ and fairly random, then the value $\sqrt[r]{\textbf{dh}}$ tends to a constant, as $r$ increases (to infinity).\\
+
+ Therefore, a large value for $r$ may imply that $\vv'$ represents a reasonable approximation of $\textbf{g}$. Using the algorithm used for solving the Closest Principal Ideal Generator problem, presented in \cite{Gar15}, Section 9.5, the attacker may recover the generator $\textbf{g}$, thus breaking the entire scheme.\\
+ 
+ However, the attack is somewhat implausible for the GGH13 construction, because in practice $n$ is very large compared to $k$, hence the condition that $r$ is much larger than $k$ is not sufficient (taking into consideration the bounds presented at \textbf{Lemma 2}). It is presented though, because there exists a small risk that an attacker may implement an efficient version of the algorithm.
+ 
+ \section{Averaging attacks}
+ 
+ Averaging attacks refer to algorithms that are capable to compute the invariant $\textbf{h}$, by observing many elements that have the structure $\textbf{h} \cdot \textbf{r}$, with a random $\textbf{r}$. Otherwise, after seeing many elements, they may return the "common" part of all the input encodings. \\
+ 
+ Averaging attacks may be used together with the zeroizing attack. It is reminded that during the aforementioned attack, numerous elements that have the form $\alpha \cdot \textbf{g}$ are available to the attacker. Therefore, if she could mount an averaging attack using the found encodings, the construction would be completely broken.\\
+ 
+ Garg presents in his PhD thesis, \cite{Gar15}, Chapter 9, four versions of averaging attacks. The first one is used to recover the quantity $\textbf{h} \cdot \bar{\textbf{h}}$, where $\textbf{h}$ is the invariant of the encodings. Then, a way to recover $\textbf{h}$ from $\textbf{h} \cdot \bar{\textbf{h}}$, using the Gentry-Szydlo algorithm is exposed. The last two attacks are extensions to the previous ones, designed by Nguyen-Regev and Ducas-Nguyen. \\ 
+ 
+ Luckily, in practice there is not a sufficient number of public level-one encodings of zero such that the mentioned attack to succeed. However, it is important that the awareness of the existence of such attacks is raised, and to already find methods to defend against this type of attack.
+ 

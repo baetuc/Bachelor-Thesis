@@ -1,2 +1,19 @@
 \chapter*{Conclusions}
 \addcontentsline{toc}{chapter}{Conclusions}
+
+As exposed many times throughout the current paper, \textit{multilinear maps} may bring various advantages, proving to be very useful in cryptography. They were defined for the first time by Boneh and Silverberg in \cite{BoS02} and afterwards numerous applications of cryptographic multilinear maps were designed. However, valid implementations of such functions are not yet designed and it is long-thought that such constructions are fairly unnatural.\\
+
+Therefore, approximations of multilinear maps usually suffice for most of the applications. Garg, Gentry and Halevi defined the concept of \textit{Graded Encoding System} in \cite{GGH13} and afterwards presented a method for implementing the system, based on \textit{ideal lattices}. This construction, referred to as \textit{GGH13} throughout the paper, served as a foundation stone for two other implementation of \textit{Graded Encoding Systems}, such as \textit{CLT13} \cite{CLT13}, based on integers or \textit{GGH15} \cite{GGH15}, based on directed graphs. \\
+
+The current paper represents an overview of the GGH13 construction. However, in order to start to expose the construction itself, the reader must become acquainted with various concepts.\\
+
+The first two chapters are required in order to immerse the lecturer in the right environment. Therefore, in first chapter, several results of B{\ua}etu, Cehan and M{\ua}rcule{\tz} \cite{BCM16} on bilinear maps of composite order are mentioned, then multilinear maps are defined, as a natural extension of the mentioned functions. Afterwards, the concept of \textit{Graded Encoding System} is introduced, as a method to approximate the desired multilinear constructions. In the second chapter, the required mathematical notions are reminded to the reader.\\
+
+The GGH13 construction is exposed in the third chapter, along with the problems that are supposed to be hard in the presented implementation and with a simple application of the scheme. Finally, the security of the application is analyzed in the last chapter. Therefore, various attacks are presented, based on the existence of some public parameters or the ability of the attacker to compute specific elements. The conclusions are not very encouraging, because most of the applications become insecure to the presented attacks. Only \textit{Indistinguishability Obfuscation (iO)} schemes seem to benefit from the construction, thanks to their inherent structure. However, recent research \cite{MSZ16} showed that even iO may become insecure to a new kind of attack, namely \textit{annihilating attacks}.\\
+
+The paper is designed so that even the reader with no previous knowledge in the domain can easily understand the presented information. The level of difficulty is gradually raised from chapter to chapter, so that the unexperienced lecturer may not become discouraged by the multitude of new concepts. \\
+
+However, in the last chapter of the paper, it is subtle remarked that new methods for implementing Graded Encoding Schemes are required, as the attacks become more and more ingenuous. The ambitious reader is therefore invited to propose new encoding schemes, or to nominate original defenses against existing attacks.\\
+
+In conclusion, \textit{Graded Encoding Systems} are still opened to further research, one of the major issues being represented by construction of secure applications of such schemes.
+ 
